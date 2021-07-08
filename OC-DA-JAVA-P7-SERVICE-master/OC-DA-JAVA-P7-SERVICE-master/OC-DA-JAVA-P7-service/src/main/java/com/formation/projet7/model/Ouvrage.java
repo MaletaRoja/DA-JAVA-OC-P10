@@ -28,6 +28,9 @@ public class Ouvrage implements Serializable {
 	@OneToMany(mappedBy="ouvrage")
 	private List<Exemplaire> exemplaires = new ArrayList<Exemplaire>();
 	
+	@OneToMany(mappedBy="ouvrage")
+	private List<Reservation> reservations = new ArrayList<Reservation>();
+	
 	private static final long serialVersionUID = 1L;
 	
 	public Ouvrage() {
