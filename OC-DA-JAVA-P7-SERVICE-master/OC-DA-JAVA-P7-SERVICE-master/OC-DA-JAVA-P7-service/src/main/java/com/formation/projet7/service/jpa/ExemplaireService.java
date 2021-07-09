@@ -47,14 +47,6 @@ public class ExemplaireService implements IExemplaireService {
 		
 	}
 	
-	/*
-	@Override
-	public List<ExemplaireDispo> exemplairesDisponibles() {
-		List<ExemplaireDispo> exemplairesDispos = exemplaireRepo.selectExemplairesDispos();
-		return exemplairesDispos;
-	}
-	
-	*/
 	
 	@Override
 	public List<Exemplaire> exemplairesDispos() {

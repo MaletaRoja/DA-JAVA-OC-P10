@@ -105,5 +105,13 @@ public class Ouvrage implements Serializable {
 		this.exemplaires = exemplaires;
 	}
 
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
+	}
+
 
 }

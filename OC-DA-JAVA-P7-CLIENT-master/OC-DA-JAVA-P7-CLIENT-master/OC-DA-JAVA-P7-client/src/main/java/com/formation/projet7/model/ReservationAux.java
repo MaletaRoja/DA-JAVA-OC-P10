@@ -2,39 +2,26 @@ package com.formation.projet7.model;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
-@Entity
-public class Reservation {
+public class ReservationAux {
 	
-	@Id
-	@GeneratedValue
 	private Integer id;
+	private Integer demandeur;
+	private Integer ouvrage;
+	private LocalDateTime dateDemande;
+	private LocalDateTime dateAvis;
+	private Integer exemplaire_id;	
+	private boolean actif;
+	private Integer priorite;
 	
-	@ManyToOne
-	private Utilisateur demandeur;		 // L'utilisateur qui réserve
-	
-	@ManyToOne
-	private Ouvrage ouvrage;			 // Ouvrage demandé
-	private LocalDateTime dateDemande;   // Date à laquelle la reservation est faite
-	private LocalDateTime dateAvis;		 // Date du mail pour notifier la disponibilité de l'exemplaire réservé
-
-	private Integer exemplaire_id;		 // Exemplaire attribué (devenu disponible) pour la réservation
-	
-	private boolean actif;               // Etat de la réservation. True: la réservation est valide
-										 // False: la réservation a été annulée ou le prêt est devenu actif
-	private Integer priorite; 			 // Ordre de priorité de la réservation
-	
-	public Reservation() {
+	public ReservationAux() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Reservation(Integer id, Utilisateur demandeur, Ouvrage ouvrage, LocalDateTime dateDemande,
+	
+	
+	public ReservationAux(Integer id, Integer demandeur, Integer ouvrage, LocalDateTime dateDemande,
 			LocalDateTime dateAvis, Integer exemplaire_id, boolean actif, Integer priorite) {
 		super();
 		this.id = id;
@@ -46,8 +33,8 @@ public class Reservation {
 		this.actif = actif;
 		this.priorite = priorite;
 	}
-	
-	
+
+
 
 	public Integer getId() {
 		return id;
@@ -57,21 +44,28 @@ public class Reservation {
 		this.id = id;
 	}
 
-	public Utilisateur getDemandeur() {
+	
+
+	public Integer getDemandeur() {
 		return demandeur;
 	}
 
-	public void setDemandeur(Utilisateur demandeur) {
+	public void setDemandeur(Integer demandeur) {
 		this.demandeur = demandeur;
 	}
 
-	public Ouvrage getOuvrage() {
+	
+	public Integer getOuvrage() {
 		return ouvrage;
 	}
 
-	public void setOuvrage(Ouvrage ouvrage) {
+
+
+	public void setOuvrage(Integer ouvrage) {
 		this.ouvrage = ouvrage;
 	}
+
+
 
 	public LocalDateTime getDateDemande() {
 		return dateDemande;
@@ -112,9 +106,9 @@ public class Reservation {
 	public void setPriorite(Integer priorite) {
 		this.priorite = priorite;
 	}
+	
+	
+	
 
-	
-	
-	
-	
+
 }
