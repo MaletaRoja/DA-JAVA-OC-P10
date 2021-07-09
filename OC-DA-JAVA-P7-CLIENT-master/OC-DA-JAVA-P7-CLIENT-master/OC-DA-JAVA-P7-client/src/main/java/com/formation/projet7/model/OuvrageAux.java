@@ -11,13 +11,15 @@ public class OuvrageAux {
 	private String edition;
 	private String genre;
 	private int offrable;
+	private boolean reservable;
 	
 	public OuvrageAux() {
 		
 	}
 
+	
 	public OuvrageAux(Integer id, String titre, String auteur_nom, String auteur_prenom, String edition, String genre,
-			int offrable) {
+			int offrable, boolean reservable) {
 		super();
 		this.id = id;
 		this.titre = titre;
@@ -26,8 +28,10 @@ public class OuvrageAux {
 		this.edition = edition;
 		this.genre = genre;
 		this.offrable = offrable;
+		this.reservable = reservable;
 	}
-	
+
+
 	public OuvrageAux(Ouvrage ouvrage) {
 	
 		this.id = ouvrage.getId();
@@ -94,6 +98,16 @@ public class OuvrageAux {
 
 	public void setOffrable(int offrable) {
 		this.offrable = offrable;
+	}
+
+
+	public boolean isReservable() {
+		return reservable;
+	}
+
+
+	public void setReservable(boolean reservable) {
+		this.reservable = reservable;
 	}
 
 
