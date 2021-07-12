@@ -31,8 +31,8 @@ import feign.Headers;
 @FeignClient(name="biblio-service", url="localhost:8081/biblio")
 public interface MicroServiceOuvrages {
 	
-	@GetMapping("/ouvrage/liste")
-	List<OuvrageAux> tousLesOuvrages(@RequestHeader("Authorization") String token);
+	@GetMapping("/ouvrage/liste/{idUser}")
+	List<OuvrageAux> tousLesOuvrages(@RequestHeader("Authorization") String token, @PathVariable Integer idUser);
 	
 	@GetMapping("/ouvrage/{id}")
 	ResponseEntity<?> unOuvrage(@PathVariable("id") Integer id, @RequestHeader("Authorization") String token);

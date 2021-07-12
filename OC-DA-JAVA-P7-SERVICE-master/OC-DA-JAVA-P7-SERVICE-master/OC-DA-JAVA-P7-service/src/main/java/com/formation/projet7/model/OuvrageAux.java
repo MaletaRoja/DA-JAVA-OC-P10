@@ -119,6 +119,16 @@ public class OuvrageAux {
 
 
 
+	@Override
+	public String toString() {
+		return "OuvrageAux [id=" + id + ", titre=" + titre + ", auteur_nom=" + auteur_nom + ", auteur_prenom="
+				+ auteur_prenom + ", offrable=" + offrable + ", reservable=" + reservable + "]";
+	}
+	
+	
+
+
+
 }
 
 

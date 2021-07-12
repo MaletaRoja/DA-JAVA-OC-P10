@@ -113,5 +113,13 @@ public class Ouvrage implements Serializable {
 		this.reservations = reservations;
 	}
 
+	@Override
+	public String toString() {
+		return "Ouvrage [id=" + id + ", titre=" + titre + ", auteur_nom=" + auteur_nom + ", auteur_prenom="
+				+ auteur_prenom + "]";
+	}
+	
+	
+
 
 }
