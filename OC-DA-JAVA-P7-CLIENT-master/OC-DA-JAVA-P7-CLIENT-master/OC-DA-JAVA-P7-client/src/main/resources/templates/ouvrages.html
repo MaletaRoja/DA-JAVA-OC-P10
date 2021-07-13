@@ -58,7 +58,7 @@
 							<th scope="col">Edition</th>
 							<th scope="col">Genre</th>
 							<th scope="col">disponibles</th>
-							<!--  <th scope="col">Emprunter</th> -->
+							<th scope="col">Emprunter</th>
 							 <th scope="col">Réserver</th>
 						</tr>
 					</thead>
@@ -72,13 +72,16 @@
 							<td th:text="${ouvrage.genre}" />
 							<td th:text="${nbreExemplairesDispos.get(iStat.index)}" />
 
-							<!--  
-							<span th:if="${nbreExemplairesDispos.get(iStat.index)>0}">
+							
+							<span th:if="${nbreExemplairesDispos.get(iStat.index)>0 and ouvrage.reservable}">
 							<td><a th:href="@{/biblio/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">Emprunter</a></td>
 							</span>
 							
-							-->
 							
+							
+							<span th:unless="${nbreExemplairesDispos.get(iStat.index)>0 and ouvrage.reservable}">
+							<td><a th:href="@{/biblio/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">-</a></td>
+							</span>
 							
 							<span th:if="${ouvrage.reservable}">
 							<td><a th:href="@{/biblio/client/reserver/{id}(id=${ouvrage.id})}">Réserver</a></td>
