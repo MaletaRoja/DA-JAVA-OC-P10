@@ -46,6 +46,7 @@ public class OuvrageAux {
 		this.edition = ouvrage.getEdition();
 		this.genre = ouvrage.getGenre();
 		this.offrable = new OuvrageOutil().DenombreExDisponibles(ouvrage);
+		this.reservable = false;
 	}
 	
 

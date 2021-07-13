@@ -44,21 +44,13 @@ public class OuvragesController {
 	@GetMapping("/ouvrage/liste/{idUser}")
 	public List<OuvrageAux> tousLesOuvrages(@RequestHeader("Authorization") String token,
 			@PathVariable Integer idUser) {
-		
-		System.out.println("Méthode : touslesOuvrages(); Id user: " + idUser); 
+
+		System.out.println("Méthode : touslesOuvrages(); Id user: " + idUser);
 		List<Ouvrage> ouvrages = ouvrageService.listerOuvrages();
 		List<OuvrageAux> listeOuvragesAux = new ArrayList<OuvrageAux>();
 		Utilisateur user = userRepo.getOne(idUser);
 		System.out.println("Id user récupéré: " + user.getId());
 		List<Emprunt> empruntsActifs = empruntService.listerUserEmpruntActifs(user);
-		/*
-		 * for (Ouvrage ouvrage: ouvrages) {
-		 * 
-		 * OuvrageAux o = new OuvrageAux(ouvrage); listeOuvragesAux.add(o);
-		 * 
-		 * } return listeOuvragesAux;
-		 * 
-		 */
 		listeOuvragesAux = isReservable(ouvrages, empruntsActifs);
 
 		return listeOuvragesAux;
@@ -112,45 +104,44 @@ public class OuvragesController {
 
 	private List<OuvrageAux> isReservable(List<Ouvrage> ouvrages, List<Emprunt> emprunts) {
 
-		int nbreOuvrages = ouvrages.size();
 		List<OuvrageAux> ouvragesAux = new ArrayList();
 		System.out.println("Taille emprunts: " + emprunts.size());
-
-		for (Ouvrage ouvrage : ouvrages) {
-
-			OuvrageAux o = new OuvrageAux(ouvrage);
-			System.out.println("init: " + o.toString());
-			ouvragesAux.add(o);
-
-		}
-		int i = 0;
+		boolean match = false;
 		
+		List<Integer> idEmprunts = new ArrayList<>();
+
 		for (Emprunt e : emprunts) {
 
 			Ouvrage oEmprunt = e.getExemplaire().getOuvrage();
 			Integer idOuvrageEmprunt = oEmprunt.getId();
+			System.out.println("e: " + idOuvrageEmprunt + " - id e:" + e.getId());
+			idEmprunts.add(idOuvrageEmprunt);
 
+		}
+		
+		int i = 0;
+		for (Ouvrage ouvrage : ouvrages) {
+
+			i++;
+			OuvrageAux o = new OuvrageAux(ouvrage);
+			System.out.println("o" + i +": " + o.getId());
+			ouvragesAux.add(o);
+
+		}
+		
+		for (OuvrageAux o: ouvragesAux) {
 			
-			while (i < nbreOuvrages) {
-
-				OuvrageAux oAux = ouvragesAux.get(i);
+			Integer idOuv = o.getId();
+			if(idEmprunts.contains(idOuv)) {
 				
-				if (oAux.getId() == idOuvrageEmprunt) {
-
-					oAux.setReservable(false);
-
-				} else {
-
-					oAux.setReservable(true);
-				}
+				o.setReservable(false);
+				System.out.println("id o extrait: " + idOuv);
 				
-				System.out.println("final: " + oAux.toString());
-				ouvragesAux.set(i, oAux);
-				i++;
+			}else {
+				
+				o.setReservable(true);
 			}
 			
-			i=0;
-
 		}
 
 		return ouvragesAux;
