@@ -114,14 +114,24 @@ public class EmpruntController {
 	}
 	
 	@GetMapping("/prolonger/{id}")
-	void prolonger(@PathVariable  Integer id) {
+	boolean prolonger(@PathVariable  Integer id) {
 		
-		Emprunt emprunt = empruntService.obtenirEmpruntParId(id);
-		emprunt.setProlongation(true);
+		Emprunt emprunt = empruntService.obtenirEmpruntParId(id);	
 		LocalDateTime fin = emprunt.getFin();
-		fin = fin.plus(Constants.PROLONGEMENT_MIN, ChronoUnit.MINUTES);
-		emprunt.setFin(fin);
-		empruntService.saveEmprunt(emprunt);
+		LocalDateTime dateActuelle = LocalDateTime.now();
+		if(dateActuelle.isBefore(fin)) {
+			
+			fin = fin.plus(Constants.PROLONGEMENT_MIN, ChronoUnit.MINUTES);
+			emprunt.setFin(fin);
+			emprunt.setProlongation(true);
+			 empruntService.saveEmprunt(emprunt);
+			 return true;
+			 
+		}else {
+			
+			return false;
+		}
+		
 	}
 	
 	@GetMapping("/retourner/{id}")
