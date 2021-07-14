@@ -132,12 +132,14 @@ public class OuvragesController {
 		for (OuvrageAux o: ouvragesAux) {
 			
 			Integer idOuv = o.getId();
-			if(idEmprunts.contains(idOuv)) {
+			if(idEmprunts.contains(idOuv) || o.getOffrable() != 0) {
 				
 				o.setReservable(false);
 				System.out.println("id o extrait: " + idOuv);
 				
-			}else {
+			}
+			
+			if (!idEmprunts.contains(idOuv) && o.getOffrable() == 0){
 				
 				o.setReservable(true);
 			}
