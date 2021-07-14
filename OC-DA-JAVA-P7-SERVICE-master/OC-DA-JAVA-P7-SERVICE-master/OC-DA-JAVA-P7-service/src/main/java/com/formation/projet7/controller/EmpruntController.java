@@ -78,6 +78,16 @@ public class EmpruntController {
 			ligne.setGenre(o.getGenre());
 			ligne.setDebut(em.getDebut());
 			ligne.setFin(em.getFin());
+			LocalDateTime dateActuelle = LocalDateTime.now();
+			if(dateActuelle.isBefore(em.getFin()) && !em.isProlongation()) {
+				
+				ligne.setProlongeable(true);
+				
+			}else {
+				
+				ligne.setProlongeable(false);
+			}
+			
 			tabEmprunts.add(ligne);
 
 		}
@@ -107,6 +117,15 @@ public class EmpruntController {
 			ligne.setGenre(o.getGenre());
 			ligne.setDebut(em.getDebut());
 			ligne.setFin(em.getFin());
+			LocalDateTime dateActuelle = LocalDateTime.now();
+			if(dateActuelle.isBefore(em.getFin()) && !em.isProlongation()) {
+				
+				ligne.setProlongeable(true);
+				
+			}else {
+				
+				ligne.setProlongeable(false);
+			}
 			tabEmprunts.add(ligne);
 		}
 
