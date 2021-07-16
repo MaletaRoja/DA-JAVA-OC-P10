@@ -76,8 +76,10 @@ public class OuvragesController {
 				int nbreReservations = reservations.size();
 				o.setReservations(nbreReservations);
 			} else {
+				{
+					o.setReservations(0);
+				}
 
-				o.setReservations(0);
 			}
 
 		}
@@ -85,23 +87,27 @@ public class OuvragesController {
 	}
 
 	private void setDatesRetours(List<OuvrageAux> listeOuvragesAux) {
-		
+
 		for (OuvrageAux o : listeOuvragesAux) {
 
 			Ouvrage ouvrage = ouvrageService.obtenirOuvrage(o.getId());
 			List<Emprunt> empruntsActifs = empruntService.listerOuvrageEmpruntsActifs(ouvrage);
-			
-			List<LocalDateTime> retours = new ArrayList<>();
-			for (Emprunt e : empruntsActifs) {
-				
-				System.out.println("date fin emprunt: " + e.getFin());
-				retours.add(e.getFin());
-				Collections.sort(retours);
-				o.setRetour(retours.get(retours.size() - 1));
-			}
-			
-		}
 
+			if (empruntsActifs != null && o.getOffrable() == 0) {
+
+				List<LocalDateTime> retours = new ArrayList<>();
+				for (Emprunt e : empruntsActifs) {
+
+					System.out.println("date fin emprunt: " + e.getFin());
+					retours.add(e.getFin());
+					Collections.sort(retours);
+					o.setRetour(retours.get(retours.size() - 1));
+				}
+			} else {
+
+				o.setRetour(null);
+			}
+		}
 	}
 
 	@GetMapping("/ouvrage/{id}")

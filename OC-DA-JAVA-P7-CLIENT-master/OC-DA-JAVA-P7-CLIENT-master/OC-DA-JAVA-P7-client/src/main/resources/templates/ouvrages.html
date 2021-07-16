@@ -60,6 +60,7 @@
 							<th scope="col">disponibles</th>
 							<th scope="col">Emprunter</th>
 							<th scope="col">Retour</th>
+							<th scope="col">Demandes</th>
 							 <th scope="col">Réserver</th>
 						</tr>
 					</thead>
@@ -71,25 +72,27 @@
 								th:text="${ouvrage.auteur_prenom} + ' ' + ${ouvrage.auteur_nom}" />
 							<td th:text="${ouvrage.edition}" />
 							<td th:text="${ouvrage.genre}" />
-							<td th:text="${nbreExemplairesDispos.get(iStat.index)}" />
+							<td style="text-align:center" th:text="${nbreExemplairesDispos.get(iStat.index)}" />
 
 							
 							<span th:if="${nbreExemplairesDispos.get(iStat.index)>0 and ouvrage.reservable}">
-							<td><a th:href="@{/biblio/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">Emprunter</a></td>
+							<td style="text-align:center"><a th:href="@{/biblio/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">Emprunter</a></td>
 							</span>
 							
 							
 							
 							<span th:unless="${nbreExemplairesDispos.get(iStat.index)>0 and ouvrage.reservable}">
-							<td><a th:href="@{/biblio/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">-</a></td>
+							<td style="text-align:center"><a th:href="@{/biblio/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">-</a></td>
 							</span>
 							
+							<td style="text-align:center" th:text="${#temporals.format(ouvrage.retour, 'dd-MM-yyyy')}"></td>
+							<td style="text-align:center" th:text="${ouvrage.reservations}"></td>
 							<span th:if="${ouvrage.reservable}">
 							<td><a th:href="@{/biblio/client/reserver/{id}(id=${ouvrage.id})}">Réserver</a></td>
 							</span>
 							
 							<span th:unless="${ouvrage.reservable}">
-							<td>-</td>
+							<td style="text-align:center">-</td>
 							</span>
 							
 							
