@@ -72,7 +72,7 @@ public class OuvragesController {
 
 			Integer id = o.getId();
 			List<Reservation> reservations = reservationService.obtenirListeReservation(id);
-			if (reservations != null) {
+			if (reservations != null && o.isReservable()) {
 				int nbreReservations = reservations.size();
 				o.setReservations(nbreReservations);
 			} else {

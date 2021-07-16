@@ -1,49 +1,41 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
+
 <head>
-<!-- Required meta tags -->
-<meta charset="utf-8" />
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Required meta tags -->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-	crossorigin="anonymous">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+		integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-<link rel="stylesheet" href="/css/styles.css">
-<link rel="shortcut icon" type="image/x-icon" href="/images/logo0.png" />
-<title>Bibliothèque</title>
+	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="shortcut icon" type="image/x-icon" href="/images/logo0.png" />
+	<title>Bibliothèque</title>
 </head>
+
 <body>
 	<div class="container">
 
 		<!-- ENTETE -->
 
-
 		<div th:replace="fragments/entete_post :: entete_post"></div>
 		<!-- ---------------- -->
-
 
 		<!-- IMAGE -->
 		<div class="row">
 			<div class="col">
-				<img class="img-fluid" src="/images/bandeau11.png" alt=""
-					th:src="@{/images/bandeau2.png}" />
+				<img class="img-fluid" src="/images/bandeau11.png" alt="" th:src="@{/images/bandeau2.png}" />
 			</div>
 		</div>
 		<!-- ----------------- -->
 		<div class="row d-flex justify-content-center">
 
-
 			<h1>Listes de tous les ouvrages</h1>
 
-
-
 		</div>
-
 
 		<div class="row">
 
@@ -61,42 +53,42 @@
 							<th scope="col">Emprunter</th>
 							<th scope="col">Retour</th>
 							<th scope="col">Demandes</th>
-							 <th scope="col">Réserver</th>
+							<th scope="col">Réserver</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="ouvrage, iStat: ${ouvrages}">
 							<th scope="row"><span th:text="${iStat.count}"></span></th>
 							<td th:text="${ouvrage.titre}" />
-							<td
-								th:text="${ouvrage.auteur_prenom} + ' ' + ${ouvrage.auteur_nom}" />
+							<td th:text="${ouvrage.auteur_prenom} + ' ' + ${ouvrage.auteur_nom}" />
 							<td th:text="${ouvrage.edition}" />
 							<td th:text="${ouvrage.genre}" />
 							<td style="text-align:center" th:text="${nbreExemplairesDispos.get(iStat.index)}" />
 
-							
 							<span th:if="${nbreExemplairesDispos.get(iStat.index)>0 and ouvrage.reservable}">
-							<td style="text-align:center"><a th:href="@{/biblio/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">Emprunter</a></td>
+								<td style="text-align:center"><a
+										th:href="@{/biblio/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">Emprunter</a>
+								</td>
 							</span>
-							
-							
-							
+
 							<span th:unless="${nbreExemplairesDispos.get(iStat.index)>0 and ouvrage.reservable}">
-							<td style="text-align:center"><a th:href="@{/biblio/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">-</a></td>
+								<td style="text-align:center"><a
+										th:href="@{/biblio/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">-</a>
+								</td>
 							</span>
-							
+
 							<td style="text-align:center" th:text="${#temporals.format(ouvrage.retour, 'dd-MM-yyyy')}"></td>
-							<td style="text-align:center" th:text="${ouvrage.reservations}"></td>
+							
 							<span th:if="${ouvrage.reservable}">
+							<td style="text-align:center" th:text="${ouvrage.reservations}"></td>
 							<td><a th:href="@{/biblio/client/reserver/{id}(id=${ouvrage.id})}">Réserver</a></td>
 							</span>
 							
 							<span th:unless="${ouvrage.reservable}">
 							<td style="text-align:center">-</td>
+							<td style="text-align:center">-</td>
 							</span>
 							
-							
-
 							<span th:unless="${nbreExemplairesDispos.get(iStat.index)>0}">
 								<td></td>
 							</span>
@@ -105,11 +97,7 @@
 
 					</tbody>
 				</table>
-
-
 			</div>
-
-
 		</div>
 
 		<div class="row mt-3">
@@ -120,8 +108,6 @@
 							style="background-color: #a32fa9; color: white; width: 350px;">Retour</p></a>
 				</div>
 			</div>
-
-
 		</div>
 
 		<!-- PIED DE PAGE -->
@@ -129,7 +115,6 @@
 		<div th:replace="fragments/footer :: footer"></div>
 
 		<!-- ********************************************* -->
-
 
 	</div>
 	<!-- fin conteneur -->
