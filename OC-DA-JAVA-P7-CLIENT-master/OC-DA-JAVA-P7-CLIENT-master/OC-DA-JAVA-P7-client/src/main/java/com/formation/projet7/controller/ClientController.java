@@ -419,9 +419,12 @@ public class ClientController {
 			return Constants.PAGE_CONNEXION;
 
 		} else {
-
 			
-			return Constants.RESERVATIONS;
+			Integer idUser = utilisateur.getId();
+			List<OuvrageAux> ouvrages = microServiceOuvrages.ListerReservations(token, idUser);
+			
+			//return Constants.RESERVATIONS;
+			return "ok";
 		
 		}
 		

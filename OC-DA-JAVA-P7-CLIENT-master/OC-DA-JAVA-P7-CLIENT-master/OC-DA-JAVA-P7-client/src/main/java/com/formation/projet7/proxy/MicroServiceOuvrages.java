@@ -73,5 +73,8 @@ public interface MicroServiceOuvrages {
 	@GetMapping("/recherche/simple/{phrase}")
 	public List<OuvrageAux> rechercheSimple(@RequestHeader("Authorization") String token, @PathVariable  String phrase);
 	
+	@GetMapping("/reservations/listes/{idUser}")
+	public List<OuvrageAux> ListerReservations(@RequestHeader("Authorization") String token, @PathVariable Integer idUser);
+	
 }
 
