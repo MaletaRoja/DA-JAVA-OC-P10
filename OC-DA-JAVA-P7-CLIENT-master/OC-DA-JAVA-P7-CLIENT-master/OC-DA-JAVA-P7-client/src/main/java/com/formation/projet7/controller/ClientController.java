@@ -406,5 +406,26 @@ public class ClientController {
 
 		}
 	}
+	
+	@GetMapping("/reserver/{id}")
+	public String reserver(Model model, HttpSession session) {
+		
+		String token = (String) session.getAttribute("TOKEN");
+		token = "Bearer " + token;
+		Utilisateur utilisateur = (Utilisateur) session.getAttribute("USER");
+		
+		if (utilisateur == null) {
+
+			return Constants.PAGE_CONNEXION;
+
+		} else {
+
+			
+			return Constants.RESERVATIONS;
+		
+		}
+		
+		
+	}
 
 }

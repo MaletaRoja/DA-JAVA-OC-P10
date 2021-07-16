@@ -18,13 +18,14 @@ public class OuvrageAux {
 	private boolean reservable;
 	private LocalDateTime retour; // date de retour de l'ouvrage
 	private int reservations; // nombre de réservations pour cet ouvrage
+	private int priorite;
 
 	public OuvrageAux() {
 
 	}
 
 	public OuvrageAux(Integer id, String titre, String auteur_nom, String auteur_prenom, String edition, String genre,
-			int offrable, boolean reservable, LocalDateTime retour, int reservations) {
+			int offrable, boolean reservable, LocalDateTime retour, int reservations, int priorite) {
 		super();
 		this.id = id;
 		this.titre = titre;
@@ -36,6 +37,7 @@ public class OuvrageAux {
 		this.reservable = reservable;
 		this.retour = retour;
 		this.reservations = reservations;
+		this.priorite = priorite;
 	}
 
 	public OuvrageAux(Ouvrage ouvrage) {
@@ -134,6 +136,14 @@ public class OuvrageAux {
 
 	public void setReservations(int reservations) {
 		this.reservations = reservations;
+	}
+
+	public int getPriorite() {
+		return priorite;
+	}
+
+	public void setPriorite(int priorite) {
+		this.priorite = priorite;
 	}
 
 }
