@@ -14,6 +14,7 @@ public class LigneEmprFormat {
 	private String debut;
 	private String fin;
 	private boolean prolongation;
+	private boolean prolongeable;
 	private boolean actif;
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	
@@ -21,9 +22,12 @@ public class LigneEmprFormat {
 		
 	}
 
+	
+	
 	public LigneEmprFormat(Integer id, String titre, String auteur_nom, String auteur_prenom, String edition,
-			String genre, String debut, String fin, boolean prolongation, boolean actif) {
-		
+			String genre, String debut, String fin, boolean prolongation, boolean prolongeable, boolean actif,
+			DateTimeFormatter formatter) {
+		super();
 		this.id = id;
 		this.titre = titre;
 		this.auteur_nom = auteur_nom;
@@ -33,9 +37,13 @@ public class LigneEmprFormat {
 		this.debut = debut;
 		this.fin = fin;
 		this.prolongation = prolongation;
+		this.prolongeable = prolongeable;
 		this.actif = actif;
+		this.formatter = formatter;
 	}
-	
+
+
+
 	public LigneEmprFormat(LigneEmprunt ligne) {
 		
 		this.id = ligne.getId();
@@ -47,6 +55,7 @@ public class LigneEmprFormat {
 		this.debut = ligne.getDebut().format(formatter);
 		this.fin = ligne.getFin().format(formatter);
 		this.prolongation = ligne.isProlongation();
+		this.prolongeable= ligne.isProlongeable();
 		this.actif = ligne.isActif();
 	}
 
@@ -128,6 +137,30 @@ public class LigneEmprFormat {
 
 	public void setActif(boolean actif) {
 		this.actif = actif;
+	}
+
+
+
+	public boolean isProlongeable() {
+		return prolongeable;
+	}
+
+
+
+	public void setProlongeable(boolean prolongeable) {
+		this.prolongeable = prolongeable;
+	}
+
+
+
+	public DateTimeFormatter getFormatter() {
+		return formatter;
+	}
+
+
+
+	public void setFormatter(DateTimeFormatter formatter) {
+		this.formatter = formatter;
 	}
 	
 	

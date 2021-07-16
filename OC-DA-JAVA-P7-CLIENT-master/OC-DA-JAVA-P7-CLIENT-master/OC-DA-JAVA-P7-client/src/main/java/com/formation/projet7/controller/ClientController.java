@@ -280,17 +280,27 @@ public class ClientController {
 
 			return Constants.PAGE_CONNEXION;
 
-		} else {
-
-			List<LigneEmprunt> emprunts = microServiceOuvrages.empruntsActifs(utilisateur.getId(), token);
-			LigneEmprunt emprunt = emprunts.get(id);
-			Integer idExemplaire = emprunt.getId();
-			microServiceOuvrages.prolonger(idExemplaire);
+			
+		}else {
+			
+		List<LigneEmprunt> emprunts = microServiceOuvrages.empruntsActifs(utilisateur.getId(), token);
+		LigneEmprunt emprunt = emprunts.get(id);
+		Integer idExemplaire = emprunt.getId();
+		boolean prolongation =  microServiceOuvrages.prolonger(idExemplaire);
+		
+		if (prolongation) {
+			
 			model.addAttribute("utilisateur", utilisateur);
 			model.addAttribute("authentification", true);
 			model.addAttribute("enregistrement", false);
 			return Constants.CONFIRMATION;
-
+			
+		}else {
+			
+			return Constants.ERR_PROLONGATION;
+		}
+		
+		
 		}
 	}
 

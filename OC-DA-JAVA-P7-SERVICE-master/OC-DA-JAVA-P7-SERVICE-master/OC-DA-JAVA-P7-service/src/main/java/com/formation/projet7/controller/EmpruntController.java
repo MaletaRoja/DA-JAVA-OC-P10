@@ -78,6 +78,16 @@ public class EmpruntController {
 			ligne.setGenre(o.getGenre());
 			ligne.setDebut(em.getDebut());
 			ligne.setFin(em.getFin());
+			LocalDateTime dateActuelle = LocalDateTime.now();
+			if(dateActuelle.isBefore(em.getFin()) && !em.isProlongation()) {
+				
+				ligne.setProlongeable(true);
+				
+			}else {
+				
+				ligne.setProlongeable(false);
+			}
+			
 			tabEmprunts.add(ligne);
 
 		}
@@ -107,6 +117,15 @@ public class EmpruntController {
 			ligne.setGenre(o.getGenre());
 			ligne.setDebut(em.getDebut());
 			ligne.setFin(em.getFin());
+			LocalDateTime dateActuelle = LocalDateTime.now();
+			if(dateActuelle.isBefore(em.getFin()) && !em.isProlongation()) {
+				
+				ligne.setProlongeable(true);
+				
+			}else {
+				
+				ligne.setProlongeable(false);
+			}
 			tabEmprunts.add(ligne);
 		}
 
@@ -114,14 +133,24 @@ public class EmpruntController {
 	}
 	
 	@GetMapping("/prolonger/{id}")
-	void prolonger(@PathVariable  Integer id) {
+	boolean prolonger(@PathVariable  Integer id) {
 		
-		Emprunt emprunt = empruntService.obtenirEmpruntParId(id);
-		emprunt.setProlongation(true);
+		Emprunt emprunt = empruntService.obtenirEmpruntParId(id);	
 		LocalDateTime fin = emprunt.getFin();
-		fin = fin.plus(Constants.PROLONGEMENT_MIN, ChronoUnit.MINUTES);
-		emprunt.setFin(fin);
-		empruntService.saveEmprunt(emprunt);
+		LocalDateTime dateActuelle = LocalDateTime.now();
+		if(dateActuelle.isBefore(fin)) {
+			
+			fin = fin.plus(Constants.PROLONGEMENT_MIN, ChronoUnit.MINUTES);
+			emprunt.setFin(fin);
+			emprunt.setProlongation(true);
+			empruntService.saveEmprunt(emprunt);
+			 return true;
+			 
+		}else {
+			
+			return false;
+		}
+		
 	}
 	
 	@GetMapping("/retourner/{id}")
