@@ -75,8 +75,8 @@
 							<td th:text="${emprunt.debut}" />
 							<td th:text="${emprunt.fin}" />
 							
-							<span th:unless=${emprunt.prolongation}><td><a th:href="@{/biblio/client/prolonger/{id}/(id=${iStat.index})}">Prolonger</a></td></span>
-							<span th:if=${emprunt.prolongation}><td></td></span>
+							<span th:if="${emprunt.prolongeable}"><td><a th:href="@{/biblio/client/prolonger/{id}/(id=${iStat.index})}">Prolonger</a></td></span>
+							<span th:unless="${emprunt.prolongeable}"><td></td></span>
 							
 							
 							

@@ -13,6 +13,7 @@ public class LigneEmprunt {
 	private LocalDateTime debut;
 	private LocalDateTime fin;
 	private boolean prolongation;
+	private boolean prolongeable;
 	private boolean actif;
 	
 	public LigneEmprunt() {
@@ -21,7 +22,7 @@ public class LigneEmprunt {
 	}
 
 	public LigneEmprunt(Integer id, String titre, String auteur_nom, String auteur_prenom, String edition, String genre,
-			LocalDateTime debut, LocalDateTime fin, boolean prolongation, boolean actif) {
+			LocalDateTime debut, LocalDateTime fin, boolean prolongation, boolean prolongeable, boolean actif) {
 		super();
 		this.id = id;
 		this.titre = titre;
@@ -32,6 +33,7 @@ public class LigneEmprunt {
 		this.debut = debut;
 		this.fin = fin;
 		this.prolongation = prolongation;
+		this.prolongeable = prolongeable;
 		this.actif = actif;
 	}
 
@@ -107,6 +109,14 @@ public class LigneEmprunt {
 		this.prolongation = prolongation;
 	}
 
+	public boolean isProlongeable() {
+		return prolongeable;
+	}
+
+	public void setProlongeable(boolean prolongeable) {
+		this.prolongeable = prolongeable;
+	}
+
 	public boolean isActif() {
 		return actif;
 	}
@@ -115,4 +125,5 @@ public class LigneEmprunt {
 		this.actif = actif;
 	}
 
+	
 }

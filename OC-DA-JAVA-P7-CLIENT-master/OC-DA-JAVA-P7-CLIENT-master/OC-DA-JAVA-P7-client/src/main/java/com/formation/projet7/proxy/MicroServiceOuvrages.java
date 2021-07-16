@@ -59,7 +59,7 @@ public interface MicroServiceOuvrages {
 	public List<LigneEmprunt> empruntsHist(@PathVariable  Integer id, @RequestHeader("Authorization") String token);
 	
 	@GetMapping("/prolonger/{id}")	
-	void prolonger(@PathVariable  Integer id);
+	boolean prolonger(@PathVariable  Integer id);
 	
 	@PutMapping("/modifier/compte/{id}")
 	public void modifierCompte(@PathVariable  Integer id, @RequestHeader("Authorization") String token, @RequestBody UtilisateurAux utilisateurAux);
