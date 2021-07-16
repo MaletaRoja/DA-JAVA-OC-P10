@@ -50,10 +50,24 @@ public class EmpruntService implements IEmpruntService {
 	}
 
 	@Override
-	public List<Exemplaire> listerOuvrageEmprunts(Ouvrage ouvrage) {
+	public List<Emprunt> listerOuvrageEmpruntsActifs(Ouvrage ouvrage) {
 
 		List<Exemplaire> exemplaires = ouvrage.getExemplaires();
-		return exemplaires;
+		List<Emprunt> empruntsActifs = new ArrayList<>();
+		for(Exemplaire ex: exemplaires) {
+			
+			List<Emprunt> emps = ex.getEmprunts();
+			for (Emprunt emp : emps) {
+				
+				if(emp.isActif()) {
+					
+					empruntsActifs.add(emp);
+				}
+			}
+			
+		}
+		
+		return empruntsActifs;
 	}
 
 

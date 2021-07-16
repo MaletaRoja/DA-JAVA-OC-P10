@@ -1,5 +1,7 @@
 package com.formation.projet7.model;
 
+import java.time.LocalDateTime;
+
 import com.formation.projet7.service.utils.OuvrageOutil;
 
 public class OuvrageAux {
@@ -12,14 +14,19 @@ public class OuvrageAux {
 	private String genre;
 	private int offrable;
 	private boolean reservable;
+	private LocalDateTime retour; // date de retour de l'ouvrage
+	private int reservations; // nombre de réservations pour cet ouvrage
 	
 	public OuvrageAux() {
 		
 	}
 
 	
+	
+
+
 	public OuvrageAux(Integer id, String titre, String auteur_nom, String auteur_prenom, String edition, String genre,
-			int offrable, boolean reservable) {
+			int offrable, boolean reservable, LocalDateTime retour, int reservations) {
 		super();
 		this.id = id;
 		this.titre = titre;
@@ -29,7 +36,10 @@ public class OuvrageAux {
 		this.genre = genre;
 		this.offrable = offrable;
 		this.reservable = reservable;
+		this.retour = retour;
+		this.reservations = reservations;
 	}
+
 
 
 	public OuvrageAux(Ouvrage ouvrage) {
@@ -108,6 +118,38 @@ public class OuvrageAux {
 
 	public void setReservable(boolean reservable) {
 		this.reservable = reservable;
+	}
+
+
+
+
+
+	public LocalDateTime getRetour() {
+		return retour;
+	}
+
+
+
+
+
+	public void setRetour(LocalDateTime retour) {
+		this.retour = retour;
+	}
+
+
+
+
+
+	public int getReservations() {
+		return reservations;
+	}
+
+
+
+
+
+	public void setReservations(int reservations) {
+		this.reservations = reservations;
 	}
 
 

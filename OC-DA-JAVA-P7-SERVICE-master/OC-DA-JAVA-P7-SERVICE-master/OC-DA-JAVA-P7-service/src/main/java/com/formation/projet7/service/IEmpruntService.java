@@ -11,7 +11,7 @@ public interface IEmpruntService {
 	
 	List<Emprunt> listerUserEmprunt(Utilisateur user);
 	List<Emprunt> listerUserEmpruntActifs(Utilisateur user);
-	List<Exemplaire> listerOuvrageEmprunts(Ouvrage ouvrage);
+	List<Emprunt> listerOuvrageEmpruntsActifs(Ouvrage ouvrage);
 	void enregistrerEmprunt(String rubrique, Integer id, Utilisateur utilisateur);
 	public void saveEmprunt(Emprunt emprunt);
 	

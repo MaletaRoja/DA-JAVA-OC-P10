@@ -2,6 +2,8 @@ package com.formation.projet7.controller;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
@@ -17,13 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.formation.projet7.model.Emprunt;
 import com.formation.projet7.model.EmpruntAuxMail;
+import com.formation.projet7.model.Exemplaire;
 import com.formation.projet7.model.Ouvrage;
 import com.formation.projet7.model.OuvrageAux;
+import com.formation.projet7.model.Reservation;
 import com.formation.projet7.model.Utilisateur;
 import com.formation.projet7.repository.OuvrageRepo;
 import com.formation.projet7.repository.UserRepo;
 import com.formation.projet7.service.jpa.EmpruntService;
 import com.formation.projet7.service.jpa.OuvrageService;
+import com.formation.projet7.service.jpa.ReservationService;
 
 @RestController
 @RequestMapping("/biblio")
@@ -41,6 +46,9 @@ public class OuvragesController {
 	@Autowired
 	EmpruntService empruntService;
 
+	@Autowired
+	ReservationService reservationService;
+
 	@GetMapping("/ouvrage/liste/{idUser}")
 	public List<OuvrageAux> tousLesOuvrages(@RequestHeader("Authorization") String token,
 			@PathVariable Integer idUser) {
@@ -52,8 +60,48 @@ public class OuvragesController {
 		System.out.println("Id user récupéré: " + user.getId());
 		List<Emprunt> empruntsActifs = empruntService.listerUserEmpruntActifs(user);
 		listeOuvragesAux = isReservable(ouvrages, empruntsActifs);
+		setDatesRetours(listeOuvragesAux);
+		setReservations(listeOuvragesAux);
 
 		return listeOuvragesAux;
+	}
+
+	private void setReservations(List<OuvrageAux> listeOuvragesAux) {
+
+		for (OuvrageAux o : listeOuvragesAux) {
+
+			Integer id = o.getId();
+			List<Reservation> reservations = reservationService.obtenirListeReservation(id);
+			if (reservations != null) {
+				int nbreReservations = reservations.size();
+				o.setReservations(nbreReservations);
+			} else {
+
+				o.setReservations(0);
+			}
+
+		}
+
+	}
+
+	private void setDatesRetours(List<OuvrageAux> listeOuvragesAux) {
+		
+		for (OuvrageAux o : listeOuvragesAux) {
+
+			Ouvrage ouvrage = ouvrageService.obtenirOuvrage(o.getId());
+			List<Emprunt> empruntsActifs = empruntService.listerOuvrageEmpruntsActifs(ouvrage);
+			
+			List<LocalDateTime> retours = new ArrayList<>();
+			for (Emprunt e : empruntsActifs) {
+				
+				System.out.println("date fin emprunt: " + e.getFin());
+				retours.add(e.getFin());
+				Collections.sort(retours);
+				o.setRetour(retours.get(retours.size() - 1));
+			}
+			
+		}
+
 	}
 
 	@GetMapping("/ouvrage/{id}")
@@ -107,7 +155,7 @@ public class OuvragesController {
 		List<OuvrageAux> ouvragesAux = new ArrayList();
 		System.out.println("Taille emprunts: " + emprunts.size());
 		boolean match = false;
-		
+
 		List<Integer> idEmprunts = new ArrayList<>();
 
 		for (Emprunt e : emprunts) {
@@ -118,32 +166,32 @@ public class OuvragesController {
 			idEmprunts.add(idOuvrageEmprunt);
 
 		}
-		
+
 		int i = 0;
 		for (Ouvrage ouvrage : ouvrages) {
 
 			i++;
 			OuvrageAux o = new OuvrageAux(ouvrage);
-			System.out.println("o" + i +": " + o.getId());
+			System.out.println("o" + i + ": " + o.getId());
 			ouvragesAux.add(o);
 
 		}
-		
-		for (OuvrageAux o: ouvragesAux) {
-			
+
+		for (OuvrageAux o : ouvragesAux) {
+
 			Integer idOuv = o.getId();
-			if(idEmprunts.contains(idOuv) || o.getOffrable() != 0) {
-				
+			if (idEmprunts.contains(idOuv) || o.getOffrable() != 0) {
+
 				o.setReservable(false);
 				System.out.println("id o extrait: " + idOuv);
-				
+
 			}
-			
-			if (!idEmprunts.contains(idOuv) && o.getOffrable() == 0){
-				
+
+			if (!idEmprunts.contains(idOuv) && o.getOffrable() == 0) {
+
 				o.setReservable(true);
 			}
-			
+
 		}
 
 		return ouvragesAux;
