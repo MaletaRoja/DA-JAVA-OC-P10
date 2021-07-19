@@ -181,14 +181,14 @@ public class ClientController {
 		String token = (String) session.getAttribute("TOKEN");
 		token = "Bearer " + token;
 		List<Exemplaire> exemplaireDisponibles = microServiceOuvrages.ListerExemplairesDisponibles(token);
-		
+
 		Utilisateur utilisateur = userConnexion.obtenirUtilisateur(session, model);
 		if (utilisateur == null) {
 
 			return Constants.PAGE_CONNEXION;
 
 		} else {
-			
+
 			List<OuvrageAux> ouvrages = microServiceOuvrages.tousLesOuvrages(token, utilisateur.getId());
 			return Constants.RUBRIQUES;
 
@@ -280,27 +280,25 @@ public class ClientController {
 
 			return Constants.PAGE_CONNEXION;
 
-			
-		}else {
-			
-		List<LigneEmprunt> emprunts = microServiceOuvrages.empruntsActifs(utilisateur.getId(), token);
-		LigneEmprunt emprunt = emprunts.get(id);
-		Integer idExemplaire = emprunt.getId();
-		boolean prolongation =  microServiceOuvrages.prolonger(idExemplaire);
-		
-		if (prolongation) {
-			
-			model.addAttribute("utilisateur", utilisateur);
-			model.addAttribute("authentification", true);
-			model.addAttribute("enregistrement", false);
-			return Constants.CONFIRMATION;
-			
-		}else {
-			
-			return Constants.ERR_PROLONGATION;
-		}
-		
-		
+		} else {
+
+			List<LigneEmprunt> emprunts = microServiceOuvrages.empruntsActifs(utilisateur.getId(), token);
+			LigneEmprunt emprunt = emprunts.get(id);
+			Integer idExemplaire = emprunt.getId();
+			boolean prolongation = microServiceOuvrages.prolonger(idExemplaire);
+
+			if (prolongation) {
+
+				model.addAttribute("utilisateur", utilisateur);
+				model.addAttribute("authentification", true);
+				model.addAttribute("enregistrement", false);
+				return Constants.CONFIRMATION;
+
+			} else {
+
+				return Constants.ERR_PROLONGATION;
+			}
+
 		}
 	}
 
@@ -416,29 +414,71 @@ public class ClientController {
 
 		}
 	}
-	
-	@GetMapping("/reserver/{id}")
-	public String reserver(Model model, HttpSession session) {
-		
+
+	@GetMapping("reservations")
+	public String reservations(Model model, HttpSession session) {
+
 		String token = (String) session.getAttribute("TOKEN");
 		token = "Bearer " + token;
-		Utilisateur utilisateur = (Utilisateur) session.getAttribute("USER");
-		
+		Utilisateur utilisateur = userConnexion.obtenirUtilisateur(session, model);
+
 		if (utilisateur == null) {
 
 			return Constants.PAGE_CONNEXION;
 
 		} else {
-			
+
 			Integer idUser = utilisateur.getId();
-			List<OuvrageAux> ouvrages = microServiceOuvrages.ListerReservations(token, idUser);
-			
-			//return Constants.RESERVATIONS;
-			return "ok";
-		
+			List<OuvrageAux> ouvrages = microServiceOuvrages.listerReservations(token, idUser);
+			model.addAttribute("ouvrages", ouvrages);
+			return Constants.RESERVATIONS;
 		}
+
+	}
+
+	@GetMapping("/reserver/{id}")
+	public String reserver(Model model, HttpSession session, @PathVariable(name = "id") Integer idOuvrage) {
+
+		String token = (String) session.getAttribute("TOKEN");
+		token = "Bearer " + token;
+		System.out.println("Token header: " + token);
+		Utilisateur utilisateur = userConnexion.obtenirUtilisateur(session, model);
+
+		if (utilisateur == null) {
+
+			return Constants.PAGE_CONNEXION;
+
+		} else {
+
+			Integer idUser = utilisateur.getId();
+			boolean reservable = microServiceOuvrages.reserverOuvrage(token, idUser, idOuvrage);
+			model.addAttribute("reservable", reservable);
+			return Constants.CONFIRME_RESERVATION;
+
+		}
+
+	}
+
+	@GetMapping("/reservation/annuler/{id}")
+	public String annulerReservation(Model model, HttpSession session, @PathVariable(name = "id") Integer idOuvrage) {
 		
-		
+		String token = (String) session.getAttribute("TOKEN");
+		token = "Bearer " + token;
+		System.out.println("Token header: " + token);
+		Utilisateur utilisateur = userConnexion.obtenirUtilisateur(session, model);
+
+		if (utilisateur == null) {
+
+			return Constants.PAGE_CONNEXION;
+
+		} else {
+
+			Integer idUser = utilisateur.getId();
+			microServiceOuvrages.annulerReservation(token, idUser, idOuvrage);
+			return Constants.CONFIRME_ANNULATION;
+
+		}
+
 	}
 
 }

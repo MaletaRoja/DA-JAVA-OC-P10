@@ -62,8 +62,19 @@ public class OuvragesController {
 		listeOuvragesAux = isReservable(ouvrages, empruntsActifs);
 		setDatesRetours(listeOuvragesAux);
 		setReservations(listeOuvragesAux);
+		isReserve(listeOuvragesAux, idUser);
 
 		return listeOuvragesAux;
+	}
+
+	private void isReserve(List<OuvrageAux> listeOuvragesAux, Integer idUser) {
+		
+		for(OuvrageAux o: listeOuvragesAux) {
+			
+			boolean reserve = reservationService.isReserve(o, idUser);
+			o.setReservable(reserve);
+		}
+		
 	}
 
 	private void setReservations(List<OuvrageAux> listeOuvragesAux) {
@@ -71,7 +82,7 @@ public class OuvragesController {
 		for (OuvrageAux o : listeOuvragesAux) {
 
 			Integer id = o.getId();
-			List<Reservation> reservations = reservationService.obtenirListeReservation(id);
+			List<Reservation> reservations = reservationService.obtenirListeReservationsParOuvrage(id);
 			if (reservations != null && o.isReservable()) {
 				int nbreReservations = reservations.size();
 				o.setReservations(nbreReservations);
@@ -157,7 +168,7 @@ public class OuvragesController {
 	}
 
 	private List<OuvrageAux> isReservable(List<Ouvrage> ouvrages, List<Emprunt> emprunts) {
-
+		
 		List<OuvrageAux> ouvragesAux = new ArrayList();
 		System.out.println("Taille emprunts: " + emprunts.size());
 		boolean match = false;

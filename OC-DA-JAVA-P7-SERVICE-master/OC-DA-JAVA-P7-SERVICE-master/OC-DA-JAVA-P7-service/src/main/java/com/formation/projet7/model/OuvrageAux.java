@@ -145,5 +145,7 @@ public class OuvrageAux {
 	public void setPriorite(int priorite) {
 		this.priorite = priorite;
 	}
+	
+	
 
 }

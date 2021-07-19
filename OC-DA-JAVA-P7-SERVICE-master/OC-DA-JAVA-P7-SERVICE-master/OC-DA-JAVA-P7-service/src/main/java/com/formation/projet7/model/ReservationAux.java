@@ -141,10 +141,7 @@ public class ReservationAux {
 		return reservation;
 	}
 	
-	boolean isValid(ReservationService reservationService) {
-		
-		return reservationService.isReservationPossible(this.ouvrage);		
-	}
+	
 	
 
 
