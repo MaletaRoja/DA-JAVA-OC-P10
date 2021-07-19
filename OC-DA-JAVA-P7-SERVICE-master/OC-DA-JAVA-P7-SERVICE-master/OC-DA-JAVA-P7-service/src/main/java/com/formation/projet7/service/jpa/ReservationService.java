@@ -25,13 +25,12 @@ public class ReservationService implements IReservationService {
 
 	@Autowired
 	OuvrageRepo ouvrageRepo;
-	
+
 	@Autowired
 	ExemplaireService exemplaireService;
-	
+
 	@Autowired
 	UserService userService;
-
 
 	@Override
 	public void enregistrerReservation(Reservation reservation) {
@@ -40,9 +39,8 @@ public class ReservationService implements IReservationService {
 
 	}
 
-
 	@Override
-	public List<Reservation> obtenirListeReservationsParOuvrage(Integer id){
+	public List<Reservation> obtenirListeReservationsParOuvrage(Integer id) {
 
 		Ouvrage ouvrage = ouvrageRepo.getOne(id);
 		List<Reservation> reservations = ouvrage.getReservations();
@@ -50,80 +48,97 @@ public class ReservationService implements IReservationService {
 		return reservations;
 	}
 
+	/*
+	 * Permet de déterminer si le nombre limite de réservations pour un ouvrage a
+	 * été atteint et retourne l'ordre de priorité pour la réservation envisagée
+	 * 
+	 * nombre limite de réservation : 2 x le nombre d'exemplaires actifs
+	 * 
+	 */
+
 	@Override
-	public Integer isReservationPossible(Integer id) {
+	public int isReservationPossible(Integer id) {
 
 		Ouvrage ouvrage = ouvrageRepo.getOne(id);
 		List<Reservation> reservations = ouvrage.getReservations();
+		System.out.println("taille liste reservations" + reservations.size());
 		List<Reservation> reservationsActives = new ArrayList<>();
-		Integer priorite = 0;
-		for(Reservation r : reservations) {
-			
-			if (r.isActif()) {
-				reservationsActives.add(r);
-				priorite++;
-				
-			}
-		}
-		List<Exemplaire> exemplaires = ouvrage.getExemplaires();
-		int reservationsPermises = exemplaires.size() * Constants.FACTEUR_RESERVATION;
-		if (reservations.size() <= reservationsPermises) {
-			
-			List<Exemplaire> disponibles = exemplaireService.exemplairesDisposParOuvrage(id);
-			if (disponibles.size() !=0) {
-				
-				return priorite+1;
-				
-			}else {
-				
-				return new Integer(1);
-			}
-			
+		int priorite = 0;
+		if (reservations.size() == 0) {
+
+			priorite = 1;
 			
 		} else {
 
-			return new Integer(1);
+			for (Reservation r : reservations) {
+
+				if (r.isActif()) {
+					reservationsActives.add(r);
+					priorite++;
+
+				}
+			}
+		}
+
+		List<Exemplaire> exemplaires = ouvrage.getExemplaires();
+		List<Exemplaire> exActifs = new ArrayList<>();
+		for (Exemplaire e : exemplaires) {
+
+			if (e.isActif()) {
+				exActifs.add(e);
+			}
+		}
+		int reservationsPermises = exActifs.size() * Constants.FACTEUR_RESERVATION;
+		if (reservationsActives.size() <= reservationsPermises) {
+
+			List<Exemplaire> disponibles = exemplaireService.exemplairesDisposParOuvrage(id);
+			if (disponibles.size() == 0) {
+
+				return priorite;
+
+			} else {
+
+				return -1;
+			}
+
+		} else {
+
+			return -1;
 		}
 	}
 
-	
-
 	@Override
 	public List<Reservation> obtenirListeReservationsParUtilisateur(Integer id) {
-		
+
 		Utilisateur demandeur = userService.obtenirUser(id);
 		List<Reservation> reservations = reservationRepo.findByDemandeur(demandeur);
 		return reservations;
 	}
 
-	
 	@Override
 	public void annulerReservation(Integer idUser, Integer idOuvrage) {
-		
+
 		Utilisateur demandeur = userService.obtenirUser(idUser);
 		Ouvrage ouvrage = ouvrageRepo.getOne(idOuvrage);
 		Reservation reservation = reservationRepo.findByDemandeurAndOuvrage(demandeur, ouvrage);
 		reservationRepo.delete(reservation);
 	}
 
-
 	public boolean isReserve(OuvrageAux o, Integer idUser) {
-		
+
 		Utilisateur demandeur = userService.obtenirUser(idUser);
 		Integer idOuvrage = o.getId();
 		Ouvrage ouvrage = ouvrageRepo.getOne(idOuvrage);
 		Reservation reservation = reservationRepo.findByDemandeurAndOuvrage(demandeur, ouvrage);
-		if(reservation != null) {
-			
+		if (reservation != null) {
+
 			return false;
-			
-		}else {
-			
+
+		} else {
+
 			return o.isReservable();
 		}
-		
-	}
 
-	
+	}
 
 }

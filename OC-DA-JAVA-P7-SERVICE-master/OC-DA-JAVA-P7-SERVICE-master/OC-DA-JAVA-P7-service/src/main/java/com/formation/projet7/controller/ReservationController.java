@@ -70,6 +70,13 @@ public class ReservationController {
 				o.setRetour(retours.get(retours.size() - 1));
 			}
 			
+			for (OuvrageAux ouv : ouvrages) {
+				
+				Integer idO = ouv.getId();
+				Integer priorite = reservationService.isReservationPossible(idO);
+				ouv.setPriorite(priorite);
+			}
+			
 			ouvrages.add(o);
 		}
 		
@@ -85,9 +92,9 @@ public class ReservationController {
 		System.out.println("Id ouvrage: " + ouvrage.getId());
 		List<Exemplaire> exemplaires = ouvrage.getExemplaires();
 		
-		Integer priorite = reservationService.isReservationPossible(idOuvrage);
-		
-		if(!priorite.equals(-1)) {
+		int priorite = reservationService.isReservationPossible(idOuvrage);
+		System.out.println("priorité: " + priorite);
+		if(priorite != -1) {
 			
 			Reservation reservation = new Reservation();
 			reservation.setActif(true);

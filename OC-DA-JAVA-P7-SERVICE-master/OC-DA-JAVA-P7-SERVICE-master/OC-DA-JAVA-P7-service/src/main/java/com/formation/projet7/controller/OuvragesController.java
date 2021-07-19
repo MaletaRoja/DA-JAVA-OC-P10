@@ -59,23 +59,89 @@ public class OuvragesController {
 		Utilisateur user = userRepo.getOne(idUser);
 		System.out.println("Id user récupéré: " + user.getId());
 		List<Emprunt> empruntsActifs = empruntService.listerUserEmpruntActifs(user);
-		listeOuvragesAux = isReservable(ouvrages, empruntsActifs);
+		listeOuvragesAux = estEmprunte(ouvrages, empruntsActifs);
 		setDatesRetours(listeOuvragesAux);
 		setReservations(listeOuvragesAux);
 		isReserve(listeOuvragesAux, idUser);
+		for (OuvrageAux o : listeOuvragesAux) {
+			
+			Integer idO = o.getId();
+			Integer priorite = reservationService.isReservationPossible(idO);
+			o.setPriorite(priorite);
+		}
 
 		return listeOuvragesAux;
 	}
+	
+	/*
+	 * Determine si un ouvrage a été emprunté
+	 * Si l'ouvrage est emprumté, il ne peut pas être réservé
+	 * 
+	 */
+	private List<OuvrageAux> estEmprunte(List<Ouvrage> ouvrages, List<Emprunt> emprunts) {
+
+		List<OuvrageAux> ouvragesAux = new ArrayList();
+		System.out.println("Taille emprunts: " + emprunts.size());
+		List<Integer> idEmprunts = new ArrayList<>();
+
+		for (Emprunt e : emprunts) {
+
+			Ouvrage oEmprunt = e.getExemplaire().getOuvrage();
+			Integer idOuvrageEmprunt = oEmprunt.getId();
+			System.out.println("e: " + idOuvrageEmprunt + " - id e:" + e.getId());
+			idEmprunts.add(idOuvrageEmprunt);
+
+		}
+
+		int i = 0;
+		for (Ouvrage ouvrage : ouvrages) {
+
+			i++;
+			OuvrageAux o = new OuvrageAux(ouvrage);
+			System.out.println("o" + i + ": " + o.getId());
+			ouvragesAux.add(o);
+
+		}
+
+		for (OuvrageAux o : ouvragesAux) {
+
+			Integer idOuv = o.getId();
+			if (idEmprunts.contains(idOuv) || o.getOffrable() != 0) {
+
+				o.setReservable(false);
+				System.out.println("id o extrait: " + idOuv);
+
+			}
+
+			if (!idEmprunts.contains(idOuv) && o.getOffrable() == 0) {
+
+				o.setReservable(true);
+			}
+
+		}
+
+		return ouvragesAux;
+
+	}
+	
+	/*
+	 * Détermine si un ouvrage est déjà réservé
+	 * 
+	 */
 
 	private void isReserve(List<OuvrageAux> listeOuvragesAux, Integer idUser) {
-		
-		for(OuvrageAux o: listeOuvragesAux) {
-			
+
+		for (OuvrageAux o : listeOuvragesAux) {
+
 			boolean reserve = reservationService.isReserve(o, idUser);
 			o.setReservable(reserve);
 		}
-		
+
 	}
+	
+	/*
+	 * Indique le nombre de réservations en cours pour un ouvrage 
+	 */
 
 	private void setReservations(List<OuvrageAux> listeOuvragesAux) {
 
@@ -83,7 +149,7 @@ public class OuvragesController {
 
 			Integer id = o.getId();
 			List<Reservation> reservations = reservationService.obtenirListeReservationsParOuvrage(id);
-			if (reservations != null && o.isReservable()) {
+			if (reservations != null) {
 				int nbreReservations = reservations.size();
 				o.setReservations(nbreReservations);
 			} else {
@@ -96,6 +162,10 @@ public class OuvragesController {
 		}
 
 	}
+	
+	/*
+	 * Indique la date de retour d'un ouvrage s'il n'y a plus d'exemplaires disponibles
+	 */
 
 	private void setDatesRetours(List<OuvrageAux> listeOuvragesAux) {
 
@@ -165,54 +235,6 @@ public class OuvragesController {
 		}
 
 		return ouvrages;
-	}
-
-	private List<OuvrageAux> isReservable(List<Ouvrage> ouvrages, List<Emprunt> emprunts) {
-		
-		List<OuvrageAux> ouvragesAux = new ArrayList();
-		System.out.println("Taille emprunts: " + emprunts.size());
-		boolean match = false;
-
-		List<Integer> idEmprunts = new ArrayList<>();
-
-		for (Emprunt e : emprunts) {
-
-			Ouvrage oEmprunt = e.getExemplaire().getOuvrage();
-			Integer idOuvrageEmprunt = oEmprunt.getId();
-			System.out.println("e: " + idOuvrageEmprunt + " - id e:" + e.getId());
-			idEmprunts.add(idOuvrageEmprunt);
-
-		}
-
-		int i = 0;
-		for (Ouvrage ouvrage : ouvrages) {
-
-			i++;
-			OuvrageAux o = new OuvrageAux(ouvrage);
-			System.out.println("o" + i + ": " + o.getId());
-			ouvragesAux.add(o);
-
-		}
-
-		for (OuvrageAux o : ouvragesAux) {
-
-			Integer idOuv = o.getId();
-			if (idEmprunts.contains(idOuv) || o.getOffrable() != 0) {
-
-				o.setReservable(false);
-				System.out.println("id o extrait: " + idOuv);
-
-			}
-
-			if (!idEmprunts.contains(idOuv) && o.getOffrable() == 0) {
-
-				o.setReservable(true);
-			}
-
-		}
-
-		return ouvragesAux;
-
 	}
 
 }

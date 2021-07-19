@@ -16,7 +16,7 @@ public class OuvrageAux {
 	private String genre;
 	private int offrable;
 	private boolean reservable;
-	private LocalDateTime retour; // date de retour de l'ouvrage
+	private LocalDateTime retour; 	// date de retour de l'ouvrage
 	private int reservations; 		// nombre de réservations pour cet ouvrage
 	private int priorite;			// Ordre de priorité dans les réservations
 

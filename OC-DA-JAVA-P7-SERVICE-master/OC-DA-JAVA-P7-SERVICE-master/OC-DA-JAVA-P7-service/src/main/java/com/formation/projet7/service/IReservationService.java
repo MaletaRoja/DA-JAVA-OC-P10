@@ -8,7 +8,7 @@ import com.formation.projet7.service.jpa.ExemplaireService;
 public interface IReservationService {
 	
 	void enregistrerReservation(Reservation reservation);
-	Integer isReservationPossible(Integer id);
+	int isReservationPossible(Integer id);
 	List<Reservation> obtenirListeReservationsParOuvrage(Integer id);  // Liste les réservations pour un ouvrage (id = id de l'ouvrage)
 	List<Reservation> obtenirListeReservationsParUtilisateur(Integer id); // Liste les réservations pour un ouvrage (id = id de l'utilsateur)
 	void annulerReservation(Integer idUser, Integer idOuvrage);
