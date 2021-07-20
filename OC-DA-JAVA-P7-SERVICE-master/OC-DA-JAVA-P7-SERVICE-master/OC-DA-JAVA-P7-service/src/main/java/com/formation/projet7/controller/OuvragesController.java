@@ -64,7 +64,7 @@ public class OuvragesController {
 		setReservations(listeOuvragesAux);
 		isReserve(listeOuvragesAux, idUser);
 		for (OuvrageAux o : listeOuvragesAux) {
-			
+
 			Integer idO = o.getId();
 			Integer priorite = reservationService.isReservationPossible(idO);
 			o.setPriorite(priorite);
@@ -72,10 +72,10 @@ public class OuvragesController {
 
 		return listeOuvragesAux;
 	}
-	
+
 	/*
-	 * Determine si un ouvrage a été emprunté
-	 * Si l'ouvrage est emprumté, il ne peut pas être réservé
+	 * Determine si un ouvrage a été emprunté Si l'ouvrage est emprumté, il ne peut
+	 * pas être réservé
 	 * 
 	 */
 	private List<OuvrageAux> estEmprunte(List<Ouvrage> ouvrages, List<Emprunt> emprunts) {
@@ -123,7 +123,7 @@ public class OuvragesController {
 		return ouvragesAux;
 
 	}
-	
+
 	/*
 	 * Détermine si un ouvrage est déjà réservé
 	 * 
@@ -138,9 +138,9 @@ public class OuvragesController {
 		}
 
 	}
-	
+
 	/*
-	 * Indique le nombre de réservations en cours pour un ouvrage 
+	 * Indique le nombre de réservations en cours pour un ouvrage
 	 */
 
 	private void setReservations(List<OuvrageAux> listeOuvragesAux) {
@@ -162,9 +162,10 @@ public class OuvragesController {
 		}
 
 	}
-	
+
 	/*
-	 * Indique la date de retour d'un ouvrage s'il n'y a plus d'exemplaires disponibles
+	 * Indique la date de retour d'un ouvrage s'il n'y a plus d'exemplaires
+	 * disponibles
 	 */
 
 	private void setDatesRetours(List<OuvrageAux> listeOuvragesAux) {
@@ -176,14 +177,19 @@ public class OuvragesController {
 
 			if (empruntsActifs != null && o.getOffrable() == 0) {
 
-				List<LocalDateTime> retours = new ArrayList<>();
-				for (Emprunt e : empruntsActifs) {
+				LocalDateTime dateProche = empruntsActifs.get(0).getFin();
 
-					System.out.println("date fin emprunt: " + e.getFin());
-					retours.add(e.getFin());
-					Collections.sort(retours);
-					o.setRetour(retours.get(0));
+				for (int i = 1; i < empruntsActifs.size(); i++) {
+
+					LocalDateTime dateEnTest = empruntsActifs.get(i).getFin();
+					if (dateEnTest.isBefore(dateProche)) {
+
+						dateProche = dateEnTest;
+					}
 				}
+
+				o.setRetour(dateProche);
+
 			} else {
 
 				o.setRetour(null);
