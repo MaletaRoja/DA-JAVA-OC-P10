@@ -93,7 +93,7 @@ public class ReservationController {
 		List<Exemplaire> exemplaires = ouvrage.getExemplaires();
 		
 		int priorite = reservationService.isReservationPossible(idOuvrage);
-		System.out.println("priorité: " + priorite);
+		System.out.println("priorité retour isReservationPossible: " + priorite);
 		if(priorite != -1) {
 			
 			Reservation reservation = new Reservation();

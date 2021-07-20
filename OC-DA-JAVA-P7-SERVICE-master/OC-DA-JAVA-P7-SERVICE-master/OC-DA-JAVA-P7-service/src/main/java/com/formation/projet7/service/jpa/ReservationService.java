@@ -61,7 +61,7 @@ public class ReservationService implements IReservationService {
 
 		Ouvrage ouvrage = ouvrageRepo.getOne(id);
 		List<Reservation> reservations = ouvrage.getReservations();
-		System.out.println("taille liste reservations" + reservations.size());
+		System.out.println("taille liste reservations: " + reservations.size());
 		List<Reservation> reservationsActives = new ArrayList<>();
 		int priorite = 0;
 		if (reservations.size() == 0) {
@@ -69,14 +69,16 @@ public class ReservationService implements IReservationService {
 			priorite = 1;
 			
 		} else {
-
+			
+			System.out.println("Taille sup à 0");
 			for (Reservation r : reservations) {
-
+				
 				if (r.isActif()) {
 					reservationsActives.add(r);
 					priorite++;
 
 				}
+				priorite++;
 			}
 		}
 
