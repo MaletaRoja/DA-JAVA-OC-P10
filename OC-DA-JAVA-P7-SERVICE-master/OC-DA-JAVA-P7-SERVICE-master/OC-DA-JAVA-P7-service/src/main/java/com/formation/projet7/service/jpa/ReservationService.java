@@ -123,6 +123,19 @@ public class ReservationService implements IReservationService {
 		Utilisateur demandeur = userService.obtenirUser(idUser);
 		Ouvrage ouvrage = ouvrageRepo.getOne(idOuvrage);
 		Reservation reservation = reservationRepo.findByDemandeurAndOuvrage(demandeur, ouvrage);
+		int priorite = reservation.getPriorite();
+		List<Reservation> reservations = obtenirListeReservationsParOuvrage(idOuvrage);
+		for(Reservation r: reservations) {
+			
+			int prioriteReservation = r.getPriorite();
+			if (prioriteReservation > priorite) {
+				
+				prioriteReservation--;
+				r.setPriorite(prioriteReservation);
+				enregistrerReservation(r);
+			}
+		}
+		
 		reservationRepo.delete(reservation);
 	}
 
