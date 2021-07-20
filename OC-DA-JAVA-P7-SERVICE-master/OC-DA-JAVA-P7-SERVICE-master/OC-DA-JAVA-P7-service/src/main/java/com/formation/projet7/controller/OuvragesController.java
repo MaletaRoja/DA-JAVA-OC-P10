@@ -182,7 +182,7 @@ public class OuvragesController {
 					System.out.println("date fin emprunt: " + e.getFin());
 					retours.add(e.getFin());
 					Collections.sort(retours);
-					o.setRetour(retours.get(retours.size() - 1));
+					o.setRetour(retours.get(0));
 				}
 			} else {
 
