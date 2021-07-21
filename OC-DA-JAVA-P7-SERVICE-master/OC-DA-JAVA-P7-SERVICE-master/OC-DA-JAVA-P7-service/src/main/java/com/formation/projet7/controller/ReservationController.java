@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.formation.projet7.constants.Constants;
+import com.formation.projet7.model.Avis;
 import com.formation.projet7.model.Emprunt;
+import com.formation.projet7.model.EmpruntAuxMail;
 import com.formation.projet7.model.Exemplaire;
 import com.formation.projet7.model.Ouvrage;
 import com.formation.projet7.model.OuvrageAux;
@@ -115,8 +117,34 @@ public class ReservationController {
 	void annulerReservation(@RequestHeader("Authorization") String token, @PathVariable Integer idUser, @PathVariable Integer idOuvrage) {
 		
 		reservationService.annulerReservation(idUser, idOuvrage);
+	}
+	
+	@GetMapping("/reservations/mail")
+	public List<Avis> obtenirReservationasActives(@RequestHeader("Authorization") String token){
 		
+		List<Reservation> reservations = reservationService.obtenirReservationsActives();
+		List<Avis> tousLesAvis = new ArrayList<>();
+		for(Reservation r: reservations) {
+			
+			Avis a = new Avis(r);
+			tousLesAvis.add(a);
+		}
+		
+		return tousLesAvis;
+	}
+	
+	@GetMapping("/reservations/supprimer/mail")
+	public void supprimerReservationMail(@RequestHeader("Authorization") String token, @RequestBody List<Avis> ListeAvis){
+		
+		for(Avis a: ListeAvis) {
+			
+			Reservation r = reservationService.obtenirReservationParId(a.getReservation());
+			r.setActif(false);
+			reservationService.enregistrerReservation(r);
+		}
 		
 	}
+	
+	
 
 }

@@ -156,4 +156,16 @@ public class ReservationService implements IReservationService {
 
 	}
 
+	public List<Reservation> obtenirReservationsActives() {
+		
+		List<Reservation> reservations = reservationRepo.findByActif(true);
+		return reservations;
+	}
+
+	public Reservation obtenirReservationParId(Integer id) {
+		
+		Reservation reservation = reservationRepo.getOne(id);
+		return reservation;
+	}
+
 }

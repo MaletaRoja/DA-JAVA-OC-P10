@@ -16,4 +16,6 @@ public interface ReservationRepo extends JpaRepository<Reservation, Integer> {
 
 	Reservation findByDemandeurAndOuvrage(Utilisateur demandeur, Ouvrage ouvrage);
 
+	List<Reservation> findByActif(boolean b);
+
 }

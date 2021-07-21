@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import com.formation.projet7.model.Avis;
 import com.formation.projet7.model.EmpruntAuxMail;
 import com.formation.projet7.model.Login;
 import com.formation.projet7.model.UtilisateurAux;
@@ -23,4 +24,11 @@ public interface MicroServiceBibliotheque {
 
 	@PostMapping("connexion/")
 	public ResponseEntity<UtilisateurAux> generate(@RequestBody final Login login);
+	
+	@GetMapping("/reservations/mail")
+	public List<Avis> obtenirReservationasActives(@RequestHeader("Authorization") String token);
+	
+	@GetMapping("/reservations/supprimer/mail")
+	public void supprimerReservationMail(@RequestHeader("Authorization") String token, @RequestBody List<Avis> ListeAvis);
+	
 }
