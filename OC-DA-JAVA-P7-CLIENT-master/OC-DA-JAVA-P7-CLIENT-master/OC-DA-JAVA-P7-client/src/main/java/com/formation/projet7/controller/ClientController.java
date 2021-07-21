@@ -155,8 +155,10 @@ public class ClientController {
 
 		String token = (String) session.getAttribute("TOKEN");
 		token = "Bearer " + token;
-		List<OuvrageAux> ouvrages = microServiceOuvrages.tousLesOuvragesParRubrique(rubrique, token);
+		
 		Utilisateur utilisateur = userConnexion.obtenirUtilisateur(session, model);
+		Integer idUser = utilisateur.getId();
+		List<OuvrageAux> ouvrages = microServiceOuvrages.tousLesOuvragesParRubrique(token, rubrique, idUser);
 
 		if (utilisateur == null) {
 

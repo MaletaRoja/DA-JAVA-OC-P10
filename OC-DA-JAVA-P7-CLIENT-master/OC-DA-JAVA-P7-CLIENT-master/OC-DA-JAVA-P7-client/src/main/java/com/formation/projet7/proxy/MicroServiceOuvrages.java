@@ -46,8 +46,8 @@ public interface MicroServiceOuvrages {
 	@GetMapping("/exemplaire/disponibles/{id}")
 	public List<Exemplaire> ListerExemplairesDisponiblesParOuvrage(@PathVariable("id") Integer id, @RequestHeader("Authorization") String token);
 
-	@GetMapping("/ouvrage/liste/rubrique/{rubrique}")
-	public List<OuvrageAux> tousLesOuvragesParRubrique(@PathVariable  String rubrique, @RequestHeader("Authorization") String token);
+	@GetMapping("/ouvrage/liste/rubrique/{rubrique}/{idUser}")
+	public List<OuvrageAux> tousLesOuvragesParRubrique(@RequestHeader("Authorization") String token, @PathVariable  String rubrique,  @PathVariable Integer idUser);
 	
 	@PutMapping("/emprunts/save")
 	void enregistrerEmprunt(EmpruntAux empruntAux, @RequestHeader("Authorization") String token);

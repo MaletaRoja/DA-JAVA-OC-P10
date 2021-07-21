@@ -211,12 +211,29 @@ public class OuvragesController {
 		return genres;
 	}
 
-	@GetMapping("/ouvrage/liste/rubrique/{rubrique}")
+	@GetMapping("/ouvrage/liste/rubrique/{rubrique}/{idUser}")
 	public List<OuvrageAux> tousLesOuvragesParRubrique(@PathVariable String rubrique,
-			@RequestHeader("Authorization") String token) {
+			@RequestHeader("Authorization") String token, @PathVariable Integer idUser) {
 		List<Ouvrage> ouvrages = ouvrageService.listerOuvragesParRubrique(rubrique);
-		List<OuvrageAux> ouvragesAux = ouvrageService.obtenirOuvragesAux(ouvrages);
-		return ouvragesAux;
+		//List<OuvrageAux> ouvragesAux = ouvrageService.obtenirOuvragesAux(ouvrages);
+		//return ouvragesAux;
+		
+		List<OuvrageAux> listeOuvragesAux = new ArrayList<OuvrageAux>();
+		Utilisateur user = userRepo.getOne(idUser);
+		System.out.println("Id user récupéré: " + user.getId());
+		List<Emprunt> empruntsActifs = empruntService.listerUserEmpruntActifs(user);
+		listeOuvragesAux = estEmprunte(ouvrages, empruntsActifs);
+		setDatesRetours(listeOuvragesAux);
+		setReservations(listeOuvragesAux);
+		isReserve(listeOuvragesAux, idUser);
+		for (OuvrageAux o : listeOuvragesAux) {
+
+			Integer idO = o.getId();
+			Integer priorite = reservationService.isReservationPossible(idO);
+			o.setPriorite(priorite);
+		}
+
+		return listeOuvragesAux;
 	}
 
 	@GetMapping("/ouvrage/emprunts/mail")
