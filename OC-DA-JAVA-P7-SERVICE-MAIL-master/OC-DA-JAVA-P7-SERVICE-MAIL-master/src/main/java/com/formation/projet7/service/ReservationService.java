@@ -62,7 +62,7 @@ public class ReservationService {
 					LocalDateTime dateAvis = a.getDateAvis();
 					if (dateAvis == null) {	
 						envoyerAvis(a);
-						a.setDateAvis(dateAvis);
+						a.setDateAvis(LocalDateTime.now());
 						avisDates.add(a);
 						
 					}else {
