@@ -15,5 +15,6 @@ public class Constants {
     public static final String OBJET = "Bibliothèque municipale - relance";
     
     public static final long HEURES = 2;
+    public static final long DELAY_AVIS= 2;
 
 }

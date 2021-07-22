@@ -31,28 +31,28 @@ import com.formation.projet7.service.jpa.UserService;
 @RequestMapping("/biblio")
 
 public class ReservationController {
-	
+
 	@Autowired
 	ReservationService reservationService;
-	
+
 	@Autowired
 	OuvrageService ouvrageService;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	EmpruntService empruntService;
-	
-	
+
 	@GetMapping("/reservations/{idUser}")
-	public List<OuvrageAux> listerReservations(@RequestHeader("Authorization") String token, @PathVariable Integer idUser){
-		
+	public List<OuvrageAux> listerReservations(@RequestHeader("Authorization") String token,
+			@PathVariable Integer idUser) {
+
 		List<Reservation> reservations = reservationService.obtenirListeReservationsParUtilisateur(idUser);
 		List<OuvrageAux> ouvrages = new ArrayList<>();
-		
-		for(Reservation r: reservations) {
-			
+
+		for (Reservation r : reservations) {
+
 			Ouvrage ouvrage = r.getOuvrage();
 			OuvrageAux o = new OuvrageAux();
 			o.setId(ouvrage.getId());
@@ -71,33 +71,34 @@ public class ReservationController {
 				Collections.sort(retours);
 				o.setRetour(retours.get(retours.size() - 1));
 			}
-			
+
 			for (OuvrageAux ouv : ouvrages) {
-				
+
 				Integer idO = ouv.getId();
 				Integer priorite = reservationService.isReservationPossible(idO);
 				ouv.setPriorite(priorite);
 			}
-			
+
 			ouvrages.add(o);
 		}
-		
+
 		return ouvrages;
 	}
-	
+
 	@GetMapping("/reserver/{idUser}/{idOuvrage}")
-	public boolean reserverOuvrage(@RequestHeader("Authorization") String token, @PathVariable Integer idUser, @PathVariable Integer idOuvrage){
-		
+	public boolean reserverOuvrage(@RequestHeader("Authorization") String token, @PathVariable Integer idUser,
+			@PathVariable Integer idOuvrage) {
+
 		List<Reservation> reservations = reservationService.obtenirListeReservationsParOuvrage(idOuvrage);
-		
+
 		Ouvrage ouvrage = ouvrageService.obtenirOuvrage(idOuvrage);
 		System.out.println("Id ouvrage: " + ouvrage.getId());
 		List<Exemplaire> exemplaires = ouvrage.getExemplaires();
-		
+
 		int priorite = reservationService.isReservationPossible(idOuvrage);
 		System.out.println("priorité retour isReservationPossible: " + priorite);
-		if(priorite != -1) {
-			
+		if (priorite != -1) {
+
 			Reservation reservation = new Reservation();
 			reservation.setActif(true);
 			reservation.setDateDemande(LocalDateTime.now());
@@ -107,44 +108,57 @@ public class ReservationController {
 			reservation.setPriorite(priorite);
 			reservationService.enregistrerReservation(reservation);
 			return true;
-		} 
-		
+		}
+
 		return false;
-	
+
 	}
-	
+
 	@GetMapping("/reservation/annuler/{idUser}/{idOuvrage}")
-	void annulerReservation(@RequestHeader("Authorization") String token, @PathVariable Integer idUser, @PathVariable Integer idOuvrage) {
-		
+	void annulerReservation(@RequestHeader("Authorization") String token, @PathVariable Integer idUser,
+			@PathVariable Integer idOuvrage) {
+
 		reservationService.annulerReservation(idUser, idOuvrage);
 	}
-	
+
 	@GetMapping("/reservations/mail")
-	public List<Avis> obtenirReservationasActives(@RequestHeader("Authorization") String token){
-		
+	public List<Avis> obtenirReservationasActives(@RequestHeader("Authorization") String token) {
+
 		List<Reservation> reservations = reservationService.obtenirReservationsActives();
 		List<Avis> tousLesAvis = new ArrayList<>();
-		for(Reservation r: reservations) {
-			
+		for (Reservation r : reservations) {
+
 			Avis a = new Avis(r);
 			tousLesAvis.add(a);
 		}
-		
+
 		return tousLesAvis;
 	}
-	
+
 	@GetMapping("/reservations/supprimer/mail")
-	public void supprimerReservationMail(@RequestHeader("Authorization") String token, @RequestBody List<Avis> ListeAvis){
-		
-		for(Avis a: ListeAvis) {
-			
+	public void supprimerReservationMail(@RequestHeader("Authorization") String token,
+			@RequestBody List<Avis> ListeAvis) {
+
+		for (Avis a : ListeAvis) {
+
 			Reservation r = reservationService.obtenirReservationParId(a.getReservation());
 			r.setActif(false);
 			reservationService.enregistrerReservation(r);
 		}
-		
+
 	}
-	
-	
+
+	@GetMapping("/reservations/avis/dater/mail")
+	public void ajouterDatesAvisMaill(@RequestHeader("Authorization") String token, @RequestBody List<Avis> avisDates) {
+
+		for (Avis a: avisDates) {
+			
+			Reservation r = reservationService.obtenirReservationParId(a.getReservation());
+			LocalDateTime dateAvis = a.getDateAvis();
+			r.setDateAvis(dateAvis);
+			reservationService.enregistrerReservation(r);
+			
+		}
+	}
 
 }

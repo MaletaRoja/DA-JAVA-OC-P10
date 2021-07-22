@@ -105,4 +105,13 @@ public class Avis {
 		this.reservation = reservation;
 	}
 
+	@Override
+	public String toString() {
+		return "Avis [reservation=" + reservation + ", utilisateur=" + utilisateur + ", email=" + email + ", titre="
+				+ titre + ", auteur=" + auteur + ", edition=" + edition + ", dateReservation=" + dateReservation
+				+ ", dateAvis=" + dateAvis + ", exemplaire=" + exemplaire + "]";
+	}
+	
+	
+
 }

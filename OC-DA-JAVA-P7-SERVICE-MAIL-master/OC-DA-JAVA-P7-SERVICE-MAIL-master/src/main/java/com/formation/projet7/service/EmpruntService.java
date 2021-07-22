@@ -138,7 +138,7 @@ public class EmpruntService {
 					+ "Le responsable de la bibliothèque municipale";
 					
 		
-			 mailController.sendSimpleEmail(email, texte);
+			 mailController.sendSimpleEmail(email, "Relance", texte);
 			 texte = "";
 			 listeDates = "";
 			 listeTitres = "";

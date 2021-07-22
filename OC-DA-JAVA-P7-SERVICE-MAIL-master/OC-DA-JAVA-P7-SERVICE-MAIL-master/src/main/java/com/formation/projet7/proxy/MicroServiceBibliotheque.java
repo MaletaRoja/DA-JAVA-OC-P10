@@ -26,9 +26,12 @@ public interface MicroServiceBibliotheque {
 	public ResponseEntity<UtilisateurAux> generate(@RequestBody final Login login);
 	
 	@GetMapping("/reservations/mail")
-	public List<Avis> obtenirReservationasActives(@RequestHeader("Authorization") String token);
+	public List<Avis> obtenirReservationsActives(@RequestHeader("Authorization") String token);
 	
 	@GetMapping("/reservations/supprimer/mail")
 	public void supprimerReservationMail(@RequestHeader("Authorization") String token, @RequestBody List<Avis> ListeAvis);
-	
+
+	@GetMapping("/reservations/avis/dater/mail")
+	public void ajouterDatesAvisMaill(@RequestHeader("Authorization") String token, @RequestBody List<Avis> avisDates);
+
 }

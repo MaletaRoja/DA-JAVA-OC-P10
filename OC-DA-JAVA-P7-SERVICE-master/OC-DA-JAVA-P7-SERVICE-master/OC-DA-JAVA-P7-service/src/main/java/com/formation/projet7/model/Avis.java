@@ -36,10 +36,10 @@ public class Avis {
 	public Avis(Reservation reservation) {
 		super();
 		this.reservation = reservation.getId();
-		this.utilisateur = reservation.getDemandeur().getPrenom() + reservation.getDemandeur().getNom();
+		this.utilisateur = reservation.getDemandeur().getPrenom() + " " + reservation.getDemandeur().getNom();
 		this.email = reservation.getDemandeur().getUsername();
 		this.titre = reservation.getOuvrage().getTitre();
-		this.auteur = reservation.getOuvrage().getAuteur_nom();
+		this.auteur = reservation.getOuvrage().getAuteur_prenom() + " " + reservation.getOuvrage().getAuteur_nom();
 		this.edition = reservation.getOuvrage().getEdition();
 		this.dateReservation = reservation.getDateDemande();
 		this.dateAvis = reservation.getDateAvis();
@@ -117,6 +117,14 @@ public class Avis {
 	public void setReservation(Integer reservation) {
 		this.reservation = reservation;
 	}
+
+	@Override
+	public String toString() {
+		return "Avis [reservation=" + reservation + ", utilisateur=" + utilisateur + ", email=" + email + ", titre="
+				+ titre + ", auteur=" + auteur + ", edition=" + edition + ", dateReservation=" + dateReservation
+				+ ", dateAvis=" + dateAvis + ", exemplaire=" + exemplaire + "]";
+	}
+	
 	
 
 }
