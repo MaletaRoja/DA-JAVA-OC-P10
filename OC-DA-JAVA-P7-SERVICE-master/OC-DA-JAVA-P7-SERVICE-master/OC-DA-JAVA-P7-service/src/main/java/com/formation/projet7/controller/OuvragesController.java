@@ -78,7 +78,7 @@ public class OuvragesController {
 	 * pas être réservé
 	 * 
 	 */
-	private List<OuvrageAux> estEmprunte(List<Ouvrage> ouvrages, List<Emprunt> emprunts) {
+	public List<OuvrageAux> estEmprunte(List<Ouvrage> ouvrages, List<Emprunt> emprunts) {
 
 		List<OuvrageAux> ouvragesAux = new ArrayList();
 		System.out.println("Taille emprunts: " + emprunts.size());
