@@ -174,7 +174,9 @@ public class OuvragesController {
 
 			Ouvrage ouvrage = ouvrageService.obtenirOuvrage(o.getId());
 			List<Emprunt> empruntsActifs = empruntService.listerOuvrageEmpruntsActifs(ouvrage);
+			checkDates(empruntsActifs, o);
 
+			/*
 			if (empruntsActifs != null && o.getOffrable() == 0) {
 
 				LocalDateTime dateProche = empruntsActifs.get(0).getFin();
@@ -194,6 +196,10 @@ public class OuvragesController {
 
 				o.setRetour(null);
 			}
+			
+			*/
+			
+			
 		}
 	}
 
@@ -258,6 +264,30 @@ public class OuvragesController {
 		}
 
 		return ouvrages;
+	}
+	
+	public void checkDates(List<Emprunt> empruntsActifs, OuvrageAux o) {
+		
+		if (empruntsActifs != null && o.getOffrable() == 0) {
+
+			LocalDateTime dateProche = empruntsActifs.get(0).getFin();
+
+			for (int i = 1; i < empruntsActifs.size(); i++) {
+
+				LocalDateTime dateEnTest = empruntsActifs.get(i).getFin();
+				if (dateEnTest.isBefore(dateProche)) {
+
+					dateProche = dateEnTest;
+				}
+			}
+
+			o.setRetour(dateProche);
+
+		} else {
+
+			o.setRetour(null);
+		}
+		
 	}
 
 }
