@@ -342,5 +342,7 @@ public class OuvrageControllerTest {
 		when(reservationService.obtenirListeReservationsParOuvrage(3)).thenReturn(reservations_o3);
 		ouvragesController.setReservations(listeOuvragesAux);
 		
+		
+		
 	}
 }
