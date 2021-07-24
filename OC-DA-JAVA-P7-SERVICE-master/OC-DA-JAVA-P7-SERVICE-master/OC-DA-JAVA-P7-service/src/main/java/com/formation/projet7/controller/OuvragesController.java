@@ -49,6 +49,14 @@ public class OuvragesController {
 	@Autowired
 	ReservationService reservationService;
 
+	public ReservationService getReservationService() {
+		return reservationService;
+	}
+
+	public void setReservationService(ReservationService reservationService) {
+		this.reservationService = reservationService;
+	}
+
 	@GetMapping("/ouvrage/liste/{idUser}")
 	public List<OuvrageAux> tousLesOuvrages(@RequestHeader("Authorization") String token,
 			@PathVariable Integer idUser) {

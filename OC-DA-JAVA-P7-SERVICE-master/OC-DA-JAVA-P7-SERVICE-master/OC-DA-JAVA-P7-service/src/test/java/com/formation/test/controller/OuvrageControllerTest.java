@@ -8,8 +8,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -47,10 +49,10 @@ public class OuvrageControllerTest {
 	
 
 	//@InjectMocks
-	private static OuvragesController ouvragesController;
+	private OuvragesController ouvragesController;
 	
 	@Mock
-	ReservationService reservationService;
+	private ReservationService reservationService;
 	
 	private static List<Emprunt> emprunts_u1;
 	private static List<Emprunt> emprunts_u2;
@@ -101,12 +103,13 @@ public class OuvrageControllerTest {
 	private static Emprunt e2_u3;
 	private static Emprunt e3_u3;
 
-	@BeforeAll
-	static void setUp() {
+	@BeforeEach
+	void setUp() {
 		
 		
 		
 		ouvragesController = new OuvragesController();
+		ouvragesController.setReservationService(reservationService);
 
 		emprunts_u1 = new ArrayList<>();
 		emprunts_u2 = new ArrayList<>();
@@ -310,6 +313,7 @@ public class OuvrageControllerTest {
 	@Test 
 	public void setReservationTest() {
 		
+		
 		List<Ouvrage> ouvrages = new ArrayList<>();
 		o1 = new Ouvrage(1, "titre1", "nom1", "prenom1", "edition1", "genre1", exemplaires1_o1);
 		o2 = new Ouvrage(2, "titre2", "nom2", "prenom2", "edition2", "genre2", exemplaires2_o2);
@@ -336,7 +340,7 @@ public class OuvrageControllerTest {
 		when(reservationService.obtenirListeReservationsParOuvrage(1)).thenReturn(reservations_o1);
 		when(reservationService.obtenirListeReservationsParOuvrage(2)).thenReturn(reservations_o2);
 		when(reservationService.obtenirListeReservationsParOuvrage(3)).thenReturn(reservations_o3);
-		//ouvragesController.setReservations(listeOuvragesAux);
+		ouvragesController.setReservations(listeOuvragesAux);
 		
 	}
 }
