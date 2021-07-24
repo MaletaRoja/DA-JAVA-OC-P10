@@ -143,15 +143,17 @@ public class OuvragesController {
 	 * Indique le nombre de réservations en cours pour un ouvrage
 	 */
 
-	private void setReservations(List<OuvrageAux> listeOuvragesAux) {
+	public void setReservations(List<OuvrageAux> listeOuvragesAux) {
 
 		for (OuvrageAux o : listeOuvragesAux) {
 
 			Integer id = o.getId();
 			List<Reservation> reservations = reservationService.obtenirListeReservationsParOuvrage(id);
 			if (reservations != null) {
+				
 				int nbreReservations = reservations.size();
 				o.setReservations(nbreReservations);
+				
 			} else {
 				{
 					o.setReservations(0);
@@ -177,29 +179,25 @@ public class OuvragesController {
 			checkDates(empruntsActifs, o);
 
 			/*
-			if (empruntsActifs != null && o.getOffrable() == 0) {
+			 * if (empruntsActifs != null && o.getOffrable() == 0) {
+			 * 
+			 * LocalDateTime dateProche = empruntsActifs.get(0).getFin();
+			 * 
+			 * for (int i = 1; i < empruntsActifs.size(); i++) {
+			 * 
+			 * LocalDateTime dateEnTest = empruntsActifs.get(i).getFin(); if
+			 * (dateEnTest.isBefore(dateProche)) {
+			 * 
+			 * dateProche = dateEnTest; } }
+			 * 
+			 * o.setRetour(dateProche);
+			 * 
+			 * } else {
+			 * 
+			 * o.setRetour(null); }
+			 * 
+			 */
 
-				LocalDateTime dateProche = empruntsActifs.get(0).getFin();
-
-				for (int i = 1; i < empruntsActifs.size(); i++) {
-
-					LocalDateTime dateEnTest = empruntsActifs.get(i).getFin();
-					if (dateEnTest.isBefore(dateProche)) {
-
-						dateProche = dateEnTest;
-					}
-				}
-
-				o.setRetour(dateProche);
-
-			} else {
-
-				o.setRetour(null);
-			}
-			
-			*/
-			
-			
 		}
 	}
 
@@ -221,9 +219,9 @@ public class OuvragesController {
 	public List<OuvrageAux> tousLesOuvragesParRubrique(@PathVariable String rubrique,
 			@RequestHeader("Authorization") String token, @PathVariable Integer idUser) {
 		List<Ouvrage> ouvrages = ouvrageService.listerOuvragesParRubrique(rubrique);
-		//List<OuvrageAux> ouvragesAux = ouvrageService.obtenirOuvragesAux(ouvrages);
-		//return ouvragesAux;
-		
+		// List<OuvrageAux> ouvragesAux = ouvrageService.obtenirOuvragesAux(ouvrages);
+		// return ouvragesAux;
+
 		List<OuvrageAux> listeOuvragesAux = new ArrayList<OuvrageAux>();
 		Utilisateur user = userRepo.getOne(idUser);
 		System.out.println("Id user récupéré: " + user.getId());
@@ -265,9 +263,9 @@ public class OuvragesController {
 
 		return ouvrages;
 	}
-	
+
 	public void checkDates(List<Emprunt> empruntsActifs, OuvrageAux o) {
-		
+
 		if (empruntsActifs != null && o.getOffrable() == 0) {
 
 			LocalDateTime dateProche = empruntsActifs.get(0).getFin();
@@ -287,7 +285,7 @@ public class OuvragesController {
 
 			o.setRetour(null);
 		}
-		
+
 	}
 
 }

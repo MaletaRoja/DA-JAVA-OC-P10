@@ -11,26 +11,32 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.formation.projet7.controller.OuvragesController;
 import com.formation.projet7.model.Emprunt;
 import com.formation.projet7.model.Exemplaire;
 import com.formation.projet7.model.Ouvrage;
 import com.formation.projet7.model.OuvrageAux;
+import com.formation.projet7.model.Reservation;
 import com.formation.projet7.model.Utilisateur;
 import com.formation.projet7.service.jpa.EmpruntService;
 import com.formation.projet7.service.jpa.OuvrageService;
+import com.formation.projet7.service.jpa.ReservationService;
 
 import io.jsonwebtoken.lang.Assert;
 
+@ExtendWith(MockitoExtension.class)
 public class OuvrageControllerTest {
 	
 	/*
 	@InjectMocks
-	private OuvragesController ouvrageController;
+	private OuvragesController ouvragesController_mock;
+	
 	
 	@Mock
 	OuvrageService ouvrageService;
@@ -38,8 +44,13 @@ public class OuvrageControllerTest {
 	@Mock
 	EmpruntService empruntService;
 	*/
+	
 
+	//@InjectMocks
 	private static OuvragesController ouvragesController;
+	
+	@Mock
+	ReservationService reservationService;
 	
 	private static List<Emprunt> emprunts_u1;
 	private static List<Emprunt> emprunts_u2;
@@ -92,6 +103,7 @@ public class OuvrageControllerTest {
 
 	@BeforeAll
 	static void setUp() {
+		
 		
 		
 		ouvragesController = new OuvragesController();
@@ -292,6 +304,39 @@ public class OuvrageControllerTest {
 		ouvragesController.checkDates(empruntsActifsO1, o1Aux);
 		System.out.println("date retour après: " + o1Aux.getRetour());
 		Assertions.assertTrue(o1Aux.getRetour().equals(e1_u1.getFin()));
+		
+	}
+
+	@Test 
+	public void setReservationTest() {
+		
+		List<Ouvrage> ouvrages = new ArrayList<>();
+		o1 = new Ouvrage(1, "titre1", "nom1", "prenom1", "edition1", "genre1", exemplaires1_o1);
+		o2 = new Ouvrage(2, "titre2", "nom2", "prenom2", "edition2", "genre2", exemplaires2_o2);
+		o3 = new Ouvrage(3, "titre3", "nom3", "prenom3", "edition3", "genre3", exemplaires3_o3);
+		
+		ouvrages.add(o1);
+		ouvrages.add(o2);
+		ouvrages.add(o3);
+		
+		List<OuvrageAux> listeOuvragesAux = new ArrayList<>();
+		for(Ouvrage o: ouvrages) {
+			
+			OuvrageAux oAux = new OuvrageAux(o);
+			listeOuvragesAux.add(oAux);
+			
+		}
+		
+		List<Reservation> reservations_o1 = null;
+		List<Reservation> reservations_o2 = null;
+		List<Reservation> reservations_o3 = null;
+		
+		//Reservation r1_o1 = new Reservation();
+		
+		when(reservationService.obtenirListeReservationsParOuvrage(1)).thenReturn(reservations_o1);
+		when(reservationService.obtenirListeReservationsParOuvrage(2)).thenReturn(reservations_o2);
+		when(reservationService.obtenirListeReservationsParOuvrage(3)).thenReturn(reservations_o3);
+		//ouvragesController.setReservations(listeOuvragesAux);
 		
 	}
 }
