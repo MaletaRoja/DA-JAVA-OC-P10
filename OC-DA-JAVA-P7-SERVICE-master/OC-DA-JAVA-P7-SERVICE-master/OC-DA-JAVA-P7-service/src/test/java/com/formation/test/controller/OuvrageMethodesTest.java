@@ -23,7 +23,7 @@ import com.formation.projet7.model.Utilisateur;
 import com.formation.projet7.service.jpa.ReservationService;
 
 @ExtendWith(MockitoExtension.class)
-public class OuvrageControllerTest {
+public class OuvrageMethodesTest {
 	
 	
 	private OuvragesController ouvragesController;
