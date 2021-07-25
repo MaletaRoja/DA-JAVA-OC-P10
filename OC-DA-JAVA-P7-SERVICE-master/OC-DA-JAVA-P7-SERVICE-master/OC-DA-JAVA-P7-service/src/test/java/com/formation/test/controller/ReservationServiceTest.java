@@ -12,18 +12,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.formation.projet7.controller.OuvragesController;
 import com.formation.projet7.model.Emprunt;
 import com.formation.projet7.model.Exemplaire;
 import com.formation.projet7.model.Ouvrage;
+import com.formation.projet7.model.OuvrageAux;
 import com.formation.projet7.model.Reservation;
 import com.formation.projet7.model.Utilisateur;
 import com.formation.projet7.repository.OuvrageRepo;
+import com.formation.projet7.repository.ReservationRepo;
 import com.formation.projet7.service.jpa.ExemplaireService;
 import com.formation.projet7.service.jpa.ReservationService;
+import com.formation.projet7.service.jpa.UserService;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceTest {
@@ -34,9 +34,14 @@ public class ReservationServiceTest {
 	@Mock
 	OuvrageRepo ouvrageRepo;
 
-	
 	@Mock
 	ExemplaireService exemplaireService;
+	
+	@Mock
+	UserService userService;
+	
+	@Mock
+	ReservationRepo reservationRepo;
 	
 	private static List<Emprunt> emprunts_u1;
 	private static List<Emprunt> emprunts_u2;
@@ -200,6 +205,57 @@ public class ReservationServiceTest {
 		int priorite = reservationService.isReservationPossible(1);
 		Assertions.assertEquals(2, priorite);
 		
+	}
+	
+	@Test
+	public void isReserveSansReservationTest() {
+		
+		Integer idUser = u1.getId();
+		OuvrageAux o1Aux = new OuvrageAux(o1);
+		o1Aux.setReservable(true);
+		Integer idOuvrage = o1Aux.getId();
+		
+		reservationService = new ReservationService();
+		reservationService.setExemplaireService(exemplaireService);
+		reservationService.setOuvrageRepo(ouvrageRepo);
+		reservationService.setUserService(userService);
+		reservationService.setReservationRepo(reservationRepo);
+	
+		when(userService.obtenirUser(idUser)).thenReturn(u1);
+		when(ouvrageRepo.getOne(idOuvrage)).thenReturn(o1);
+		when(reservationRepo.findByDemandeurAndOuvrage(u1, o1)).thenReturn(null);
+		
+		boolean reserve = reservationService.isReserve(o1Aux, idUser);
+		
+		Assertions.assertTrue(reserve);
+	}
+	
+	@Test
+	public void isReserveAvecReservationTest() {
+		
+		Integer idUser = u1.getId();
+		OuvrageAux o1Aux = new OuvrageAux(o1);
+		Integer idOuvrage = o1Aux.getId();
+		
+		reservationService = new ReservationService();
+		reservationService.setExemplaireService(exemplaireService);
+		reservationService.setOuvrageRepo(ouvrageRepo);
+		reservationService.setUserService(userService);
+		reservationService.setReservationRepo(reservationRepo);
+		
+		List<Reservation> reservations_o1 = new ArrayList<>();
+		Reservation r1_o1 = new Reservation();
+		r1_o1.setActif(true);
+		r1_o1.setDemandeur(u1);
+		reservations_o1.add(r1_o1);
+		o1.setReservations(reservations_o1);
+		
+		when(userService.obtenirUser(idUser)).thenReturn(u1);
+		when(ouvrageRepo.getOne(idOuvrage)).thenReturn(o1);
+		when(reservationRepo.findByDemandeurAndOuvrage(u1, o1)).thenReturn(r1_o1);
+		
+		boolean reserve = reservationService.isReserve(o1Aux, idUser);
+		Assertions.assertFalse(reserve);
 	}
 
 
