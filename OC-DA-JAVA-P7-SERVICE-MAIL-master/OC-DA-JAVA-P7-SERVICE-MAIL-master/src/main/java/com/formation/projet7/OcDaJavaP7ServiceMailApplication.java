@@ -42,7 +42,7 @@ public class OcDaJavaP7ServiceMailApplication {
 	@Scheduled(initialDelay = 1000L, fixedDelay = 10000L)
 	void scrutation() throws InterruptedException {
 		
-		empruntService.relancer();
+		//empruntService.relancer();
 		reservationService.expedierAvis();
 		Thread.sleep(1000L * 60 * 60 * Constants.HEURES); 
 
