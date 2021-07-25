@@ -31,6 +31,40 @@ public class ReservationService implements IReservationService {
 
 	@Autowired
 	UserService userService;
+	
+	
+
+	public ReservationRepo getReservationRepo() {
+		return reservationRepo;
+	}
+
+	public void setReservationRepo(ReservationRepo reservationRepo) {
+		this.reservationRepo = reservationRepo;
+	}
+
+	public OuvrageRepo getOuvrageRepo() {
+		return ouvrageRepo;
+	}
+
+	public void setOuvrageRepo(OuvrageRepo ouvrageRepo) {
+		this.ouvrageRepo = ouvrageRepo;
+	}
+
+	public ExemplaireService getExemplaireService() {
+		return exemplaireService;
+	}
+
+	public void setExemplaireService(ExemplaireService exemplaireService) {
+		this.exemplaireService = exemplaireService;
+	}
+
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
 
 	@Override
 	public void enregistrerReservation(Reservation reservation) {

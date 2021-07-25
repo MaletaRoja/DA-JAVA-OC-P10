@@ -12,24 +12,31 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.formation.projet7.controller.OuvragesController;
 import com.formation.projet7.model.Emprunt;
 import com.formation.projet7.model.Exemplaire;
 import com.formation.projet7.model.Ouvrage;
-import com.formation.projet7.model.OuvrageAux;
 import com.formation.projet7.model.Reservation;
 import com.formation.projet7.model.Utilisateur;
+import com.formation.projet7.repository.OuvrageRepo;
+import com.formation.projet7.service.jpa.ExemplaireService;
 import com.formation.projet7.service.jpa.ReservationService;
 
 @ExtendWith(MockitoExtension.class)
-public class OuvrageControllerTest {
+public class ReservationServiceTest {
 	
 	
-	private OuvragesController ouvragesController;
+	private ReservationService reservationService;
 	
 	@Mock
-	private ReservationService reservationService;
+	OuvrageRepo ouvrageRepo;
+
+	
+	@Mock
+	ExemplaireService exemplaireService;
 	
 	private static List<Emprunt> emprunts_u1;
 	private static List<Emprunt> emprunts_u2;
@@ -79,13 +86,11 @@ public class OuvrageControllerTest {
 	private static Emprunt e1_u3;
 	private static Emprunt e2_u3;
 	private static Emprunt e3_u3;
-
+	
 	@BeforeEach
 	void setUp() {
 		
-		ouvragesController = new OuvragesController();
-		ouvragesController.setReservationService(reservationService);
-
+	
 		emprunts_u1 = new ArrayList<>();
 		emprunts_u2 = new ArrayList<>();
 		emprunts_u3 = new ArrayList<>();
@@ -161,126 +166,41 @@ public class OuvrageControllerTest {
 
 
 	}
-
+	
 	@Test
-	public void estEmprunteTest() {
-
-		List<OuvrageAux> listeOuvragesAux = ouvragesController.estEmprunte(ouvrages, empruntsActifsU1);
-		System.out.println(
-				"reservable 0? " + listeOuvragesAux.get(0).isReservable() + " id: " + listeOuvragesAux.get(0).getId());
-		System.out.println(
-				"reservable 1? " + listeOuvragesAux.get(1).isReservable() + " id: " + listeOuvragesAux.get(1).getId());
-		System.out.println(
-				"reservable 2? " + listeOuvragesAux.get(2).isReservable() + " id: " + listeOuvragesAux.get(2).getId());
-
-		Assertions.assertTrue(!listeOuvragesAux.get(0).isReservable());
-		Assertions.assertTrue(listeOuvragesAux.get(1).isReservable());
-		Assertions.assertTrue(!listeOuvragesAux.get(2).isReservable());
-
+	public void isReservationPossibleSansReservationsTest() {
+		
+		reservationService = new ReservationService();
+		reservationService.setExemplaireService(exemplaireService);
+		reservationService.setOuvrageRepo(ouvrageRepo);
+		
+		when(ouvrageRepo.getOne(1)).thenReturn(o1);
+		
+		int priorite = reservationService.isReservationPossible(1);
+		Assertions.assertEquals(1, priorite);
+		
 	}
 	
 	@Test
-	public void checkDatesTest() {
+	public void isReservationPossibleAvecReservationsTest() {
 		
-		Emprunt e1_u1 = new Emprunt(21, ex1_o1, u1, LocalDateTime.now(), LocalDateTime.now().plusYears(4), false, true);
-		Emprunt e1_u2 = new Emprunt(24, ex2_o1, u2, LocalDateTime.now(), LocalDateTime.now().plusYears(7), false, true);
-		Emprunt e1_u3 = new Emprunt(27, ex3_o1, u3, LocalDateTime.now(), LocalDateTime.now().plusYears(7), false, true);
-		
-		OuvrageAux o1Aux = new OuvrageAux(o1);
-		List<Emprunt> empruntsActifsO1 = new ArrayList<>();
-		empruntsActifsO1.add(e1_u1);
-		empruntsActifsO1.add(e1_u2);
-		empruntsActifsO1.add(e1_u3);
-		LocalDateTime dateProche = empruntsActifsO1.get(0).getFin();
-		ouvragesController.checkDates(empruntsActifsO1, o1Aux);
-		System.out.println("date retour après: " + o1Aux.getRetour());
-		Assertions.assertTrue(o1Aux.getRetour().equals(e1_u1.getFin()));
-		
-	}
-
-	@Test 
-	public void setReservationListNullTest() {
-		
-		List<Ouvrage> ouvrages = new ArrayList<>();
-		o1 = new Ouvrage(1, "titre1", "nom1", "prenom1", "edition1", "genre1", exemplaires1_o1);
-		o2 = new Ouvrage(2, "titre2", "nom2", "prenom2", "edition2", "genre2", exemplaires2_o2);
-		o3 = new Ouvrage(3, "titre3", "nom3", "prenom3", "edition3", "genre3", exemplaires3_o3);
-		
-		ouvrages.add(o1);
-		ouvrages.add(o2);
-		ouvrages.add(o3);
-		
-		List<OuvrageAux> listeOuvragesAux = new ArrayList<>();
-		for(Ouvrage o: ouvrages) {
-			
-			OuvrageAux oAux = new OuvrageAux(o);
-			listeOuvragesAux.add(oAux);
-			
-		}
-		
-		List<Reservation> reservations_o1 = null;
-		List<Reservation> reservations_o2 = null;
-		List<Reservation> reservations_o3 = null;
-		
-		when(reservationService.obtenirListeReservationsParOuvrage(1)).thenReturn(reservations_o1);
-		when(reservationService.obtenirListeReservationsParOuvrage(2)).thenReturn(reservations_o2);
-		when(reservationService.obtenirListeReservationsParOuvrage(3)).thenReturn(reservations_o3);
-		ouvragesController.setReservations(listeOuvragesAux);
-		Assertions.assertTrue(listeOuvragesAux.get(0).getReservations() == 0);
-		Assertions.assertTrue(listeOuvragesAux.get(1).getReservations() == 0);
-		Assertions.assertTrue(listeOuvragesAux.get(2).getReservations() == 0);
-	}
-	
-	
-	@Test
-	public void setReservationListNotNullTest() {
-		
-		List<Ouvrage> ouvrages = new ArrayList<>();
-		o1 = new Ouvrage(1, "titre1", "nom1", "prenom1", "edition1", "genre1", exemplaires1_o1);
-		o2 = new Ouvrage(2, "titre2", "nom2", "prenom2", "edition2", "genre2", exemplaires2_o2);
-		o3 = new Ouvrage(3, "titre3", "nom3", "prenom3", "edition3", "genre3", exemplaires3_o3);
-		
-		ouvrages.add(o1);
-		ouvrages.add(o2);
-		ouvrages.add(o3);
+		reservationService = new ReservationService();
+		reservationService.setExemplaireService(exemplaireService);
+		reservationService.setOuvrageRepo(ouvrageRepo);
 		
 		List<Reservation> reservations_o1 = new ArrayList<>();
-		List<Reservation> reservations_o2 = new ArrayList<>();
-		List<Reservation> reservations_o3 = new ArrayList<>();
-		
 		Reservation r1_o1 = new Reservation();
+		r1_o1.setActif(true);
+		r1_o1.setDemandeur(u1);
 		reservations_o1.add(r1_o1);
+		o1.setReservations(reservations_o1);
 		
-		Reservation r1_o2 = new Reservation();
-		reservations_o2.add(r1_o2);
+		when(ouvrageRepo.getOne(1)).thenReturn(o1);
 		
-		Reservation r2_o2 = new Reservation();
-		reservations_o2.add(r2_o2);
-		
-		Reservation r1_o3 = new Reservation();
-		reservations_o3.add(r1_o3);
-		
-		Reservation r2_o3 = new Reservation();
-		reservations_o3.add(r2_o3);
-		
-		Reservation r3_o3 = new Reservation();
-		reservations_o3.add(r3_o3);
-		
-		List<OuvrageAux> listeOuvragesAux = new ArrayList<>();
-		for(Ouvrage o: ouvrages) {
-			
-			OuvrageAux oAux = new OuvrageAux(o);
-			listeOuvragesAux.add(oAux);
-			
-		}
-
-		when(reservationService.obtenirListeReservationsParOuvrage(1)).thenReturn(reservations_o1);
-		when(reservationService.obtenirListeReservationsParOuvrage(2)).thenReturn(reservations_o2);
-		when(reservationService.obtenirListeReservationsParOuvrage(3)).thenReturn(reservations_o3);
-		ouvragesController.setReservations(listeOuvragesAux);
-		Assertions.assertTrue(listeOuvragesAux.get(0).getReservations() == 1);
-		Assertions.assertTrue(listeOuvragesAux.get(1).getReservations() == 2);
-		Assertions.assertTrue(listeOuvragesAux.get(2).getReservations() == 3);
+		int priorite = reservationService.isReservationPossible(1);
+		Assertions.assertEquals(2, priorite);
 		
 	}
+
+
 }
