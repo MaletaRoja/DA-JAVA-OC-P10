@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import com.formation.projet7.model.Avis;
 import com.formation.projet7.model.EmpruntAuxMail;
 import com.formation.projet7.model.Login;
+import com.formation.projet7.model.Transfert;
 import com.formation.projet7.model.UtilisateurAux;
 
 //@FeignClient(name="biblio-service", url="localhost:8081/biblio")
@@ -28,10 +29,10 @@ public interface MicroServiceBibliotheque {
 	@GetMapping("/reservations/mail")
 	public List<Avis> obtenirReservationsActives(@RequestHeader("Authorization") String token);
 	
-	@GetMapping("/reservations/supprimer/mail")
-	public void supprimerReservationMail(@RequestHeader("Authorization") String token, @RequestBody List<Avis> ListeAvis);
+	@PostMapping("/reservations/supprimer/mail")
+	public void supprimerReservationMail(@RequestHeader("Authorization") String token, @RequestBody Transfert transfertAvisDepasses);
 
-	@GetMapping("/reservations/avis/dater/mail")
-	public void ajouterDatesAvisMaill(@RequestHeader("Authorization") String token, @RequestBody List<Avis> avisDates);
+	@PostMapping("/reservations/avis/dater/mail")
+	public void ajouterDatesAvisMail(@RequestHeader("Authorization") String token, @RequestBody Transfert transfertAvisDates);
 
 }

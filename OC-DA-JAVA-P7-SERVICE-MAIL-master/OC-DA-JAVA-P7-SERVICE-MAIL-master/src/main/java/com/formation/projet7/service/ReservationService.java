@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.formation.projet7.controller.MailController;
 import com.formation.projet7.model.Login;
+import com.formation.projet7.model.Transfert;
 import com.formation.projet7.proxy.MicroServiceBibliotheque;
 import com.formation.projet7.model.Avis;
 import java.util.List;
@@ -44,24 +45,13 @@ public class ReservationService {
 		try {
 
 			for (Avis a : listeAvis) {
-
-				/*
-				String texte = "Bonjour M,Mme " + a.getUtilisateur() + "\n\n" + "Nous vous informons que l'ouvrage:\n\n"
-						+ a.getTitre() + "\n" + a.getAuteur() + "\n" + "Edition: " + a.getEdition() + "\n\n"
-						+ "que vous avez réservé le " + a.getDateReservation() + " "
-						+ "est à votre disposition à la bibliothèque municipale " + "jusqu" + "\'" + "au "
-						+ a.getDateReservation().plusDays(2) + "\n\n"
-						+ "Passé ce délai, votre réservation sera supprimer et le livre sera proposé à une autre personne."
-						+ "\n\n" + "Cordiales salutations" + "\n\n" + "Le responsable de la bibliothèque municipale.";
-
-				mailController.sendSimpleEmail(a.getEmail(), "Avis de réservation", texte);
-				*/
-				
+	
 				if(a.getExemplaire() != null) {
 					
 					LocalDateTime dateAvis = a.getDateAvis();
 					if (dateAvis == null) {	
 						envoyerAvis(a);
+						System.out.println("Avis expédié");
 						a.setDateAvis(LocalDateTime.now());
 						avisDates.add(a);
 						
@@ -74,26 +64,31 @@ public class ReservationService {
 					}
 				}
 				
-				supprimerAvisDepasses(token, avisDepasses);
-				ajouterDates(token, avisDates);
+				Transfert transfertAvisDepasses = new Transfert();
+				transfertAvisDepasses.setListeAvis(avisDepasses);
+				Transfert transfertAvisDates = new Transfert();
+				transfertAvisDates.setListeAvis(avisDates);
+				supprimerAvisDepasses(token, transfertAvisDepasses);
+				ajouterDates(token, transfertAvisDates);
 				
 			}
 		} catch (Exception e) {
 
-			// TODO: handle exception
+			System.out.println("Problème transmission avis");
+			System.out.println(e);
 		}
 
 	}
 
-	private void ajouterDates(String token, List<Avis> avisDates) {
+	private void ajouterDates(String token, Transfert transfertAvisDates) {
 		
-		microServiceBibliotheque.ajouterDatesAvisMaill(token, avisDates);
+		microServiceBibliotheque.ajouterDatesAvisMail(token, transfertAvisDates);
 		
 	}
 
-	private void supprimerAvisDepasses(String token, List<Avis> avisDepasses) {
+	private void supprimerAvisDepasses(String token, Transfert transfertAvisDepasses) {
 		
-		microServiceBibliotheque.supprimerReservationMail(token, avisDepasses);
+		microServiceBibliotheque.supprimerReservationMail(token, transfertAvisDepasses);
 		
 	}
 
@@ -107,7 +102,7 @@ public class ReservationService {
 				+ "Passé ce délai, votre réservation sera supprimer et le livre sera proposé à une autre personne."
 				+ "\n\n" + "Cordiales salutations" + "\n\n" + "Le responsable de la bibliothèque municipale.";
 
-		mailController.sendSimpleEmail(a.getEmail(), "Avis de réservation", texte);
+		mailController.sendSimpleEmail(a.getEmail(), "Bibliothèque municipale - Avis de réservation", texte);
 
 	}
 

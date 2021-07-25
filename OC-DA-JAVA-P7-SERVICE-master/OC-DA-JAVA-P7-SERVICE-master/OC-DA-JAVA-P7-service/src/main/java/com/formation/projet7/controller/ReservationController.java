@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import com.formation.projet7.model.Exemplaire;
 import com.formation.projet7.model.Ouvrage;
 import com.formation.projet7.model.OuvrageAux;
 import com.formation.projet7.model.Reservation;
+import com.formation.projet7.model.Transfert;
 import com.formation.projet7.model.Utilisateur;
 import com.formation.projet7.service.jpa.EmpruntService;
 import com.formation.projet7.service.jpa.OuvrageService;
@@ -135,11 +137,12 @@ public class ReservationController {
 		return tousLesAvis;
 	}
 
-	@GetMapping("/reservations/supprimer/mail")
+	@PostMapping("/reservations/supprimer/mail")
 	public void supprimerReservationMail(@RequestHeader("Authorization") String token,
-			@RequestBody List<Avis> ListeAvis) {
-
-		for (Avis a : ListeAvis) {
+			@RequestBody Transfert transfertAvisDepasses) {
+		
+		List<Avis> listeAvis = transfertAvisDepasses.getListeAvis();
+		for (Avis a : listeAvis) {
 
 			Reservation r = reservationService.obtenirReservationParId(a.getReservation());
 			r.setActif(false);
@@ -148,10 +151,11 @@ public class ReservationController {
 
 	}
 
-	@GetMapping("/reservations/avis/dater/mail")
-	public void ajouterDatesAvisMaill(@RequestHeader("Authorization") String token, @RequestBody List<Avis> avisDates) {
+	@PostMapping("/reservations/avis/dater/mail")
+	public void ajouterDatesAvisMail(@RequestHeader("Authorization") String token, @RequestBody Transfert transfertAvisDates) {
 
-		for (Avis a: avisDates) {
+		List<Avis> listeAvis = transfertAvisDates.getListeAvis();
+		for (Avis a : listeAvis) {
 			
 			Reservation r = reservationService.obtenirReservationParId(a.getReservation());
 			LocalDateTime dateAvis = a.getDateAvis();
