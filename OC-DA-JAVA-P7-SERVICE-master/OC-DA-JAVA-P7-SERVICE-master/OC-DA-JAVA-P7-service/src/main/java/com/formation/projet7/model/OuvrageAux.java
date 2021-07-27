@@ -116,10 +116,14 @@ public class OuvrageAux {
 		this.reservable = reservable;
 	}
 
+	
+
 	@Override
 	public String toString() {
 		return "OuvrageAux [id=" + id + ", titre=" + titre + ", auteur_nom=" + auteur_nom + ", auteur_prenom="
-				+ auteur_prenom + ", offrable=" + offrable + ", reservable=" + reservable + "]";
+				+ auteur_prenom + ", edition=" + edition + ", genre=" + genre + ", offrable=" + offrable
+				+ ", reservable=" + reservable + ", retour=" + retour + ", reservations=" + reservations + ", priorite="
+				+ priorite + "]";
 	}
 
 	public LocalDateTime getRetour() {
