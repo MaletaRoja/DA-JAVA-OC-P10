@@ -13,6 +13,7 @@ import com.formation.projet7.Constants.Constants;
 import com.formation.projet7.controller.MailController;
 import com.formation.projet7.proxy.MicroServiceBibliotheque;
 import com.formation.projet7.service.EmpruntService;
+import com.formation.projet7.service.ReservationService;
 import com.formation.projet7.service.UserConnexion;
 
 @EnableFeignClients("com.formation.projet7")
@@ -30,6 +31,9 @@ public class OcDaJavaP7ServiceMailApplication {
 	
 	@Autowired
 	EmpruntService empruntService;
+	
+	@Autowired
+	ReservationService reservationService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(OcDaJavaP7ServiceMailApplication.class, args);
@@ -39,7 +43,9 @@ public class OcDaJavaP7ServiceMailApplication {
 	void scrutation() throws InterruptedException {
 		
 		empruntService.relancer();
-		Thread.sleep(1000L * 60 * 60 * Constants.HEURES); 
+		reservationService.expedierAvis();
+		//Thread.sleep(1000L * 60 * 60 * Constants.HEURES); // Mode production: délai = 24h00
+		Thread.sleep(1000L * 60 * Constants.MINS);  						// Mode test: délai = 5 min
 
 	}
 

@@ -19,13 +19,13 @@ public class MailController {
 	public JavaMailSender emailSender;
 
 	
-	public String sendSimpleEmail(String email, String texte) {
+	public String sendSimpleEmail(String email, String sujet, String texte) {
 
 		// Create a Simple MailMessage.
 		SimpleMailMessage message = new SimpleMailMessage();
 
 		message.setTo(email);
-		message.setSubject(Constants.OBJET);
+		message.setSubject(sujet);
 		message.setText(texte);
 
 		// Send Message!

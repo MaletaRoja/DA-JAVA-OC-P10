@@ -31,8 +31,8 @@ import feign.Headers;
 @FeignClient(name="biblio-service", url="localhost:8081/biblio")
 public interface MicroServiceOuvrages {
 	
-	@GetMapping("/ouvrage/liste")
-	List<OuvrageAux> tousLesOuvrages(@RequestHeader("Authorization") String token);
+	@GetMapping("/ouvrage/liste/{idUser}")
+	List<OuvrageAux> tousLesOuvrages(@RequestHeader("Authorization") String token, @PathVariable Integer idUser);
 	
 	@GetMapping("/ouvrage/{id}")
 	ResponseEntity<?> unOuvrage(@PathVariable("id") Integer id, @RequestHeader("Authorization") String token);
@@ -46,8 +46,8 @@ public interface MicroServiceOuvrages {
 	@GetMapping("/exemplaire/disponibles/{id}")
 	public List<Exemplaire> ListerExemplairesDisponiblesParOuvrage(@PathVariable("id") Integer id, @RequestHeader("Authorization") String token);
 
-	@GetMapping("/ouvrage/liste/rubrique/{rubrique}")
-	public List<OuvrageAux> tousLesOuvragesParRubrique(@PathVariable  String rubrique, @RequestHeader("Authorization") String token);
+	@GetMapping("/ouvrage/liste/rubrique/{rubrique}/{idUser}")
+	public List<OuvrageAux> tousLesOuvragesParRubrique(@RequestHeader("Authorization") String token, @PathVariable  String rubrique,  @PathVariable Integer idUser);
 	
 	@PutMapping("/emprunts/save")
 	void enregistrerEmprunt(EmpruntAux empruntAux, @RequestHeader("Authorization") String token);
@@ -72,6 +72,15 @@ public interface MicroServiceOuvrages {
 	
 	@GetMapping("/recherche/simple/{phrase}")
 	public List<OuvrageAux> rechercheSimple(@RequestHeader("Authorization") String token, @PathVariable  String phrase);
+	
+	@GetMapping("/reservations/{idUser}")
+	public List<OuvrageAux> listerReservations(@RequestHeader("Authorization") String token, @PathVariable Integer idUser);
+	
+	@GetMapping("/reserver/{idUser}/{idOuvrage}")
+	public boolean reserverOuvrage(@RequestHeader("Authorization") String token, @PathVariable Integer idUser, @PathVariable Integer idOuvrage);
+	
+	@GetMapping("/reservation/annuler/{idUser}/{idOuvrage}")
+	void annulerReservation(@RequestHeader("Authorization") String token, @PathVariable Integer idUser, @PathVariable Integer idOuvrage);
 	
 }
 

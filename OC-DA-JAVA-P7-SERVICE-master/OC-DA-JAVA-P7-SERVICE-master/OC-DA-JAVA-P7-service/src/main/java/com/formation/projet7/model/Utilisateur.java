@@ -32,6 +32,10 @@ public class Utilisateur implements Serializable {
 	@OneToMany(mappedBy="emprunteur")
 	private List<Emprunt> emprunts = new ArrayList();
 	
+	@JsonIgnore
+	@OneToMany(mappedBy="demandeur")
+	private List<Reservation> reservations = new ArrayList();
+	
 	
 	private static final long serialVersionUID = 1L;
 
