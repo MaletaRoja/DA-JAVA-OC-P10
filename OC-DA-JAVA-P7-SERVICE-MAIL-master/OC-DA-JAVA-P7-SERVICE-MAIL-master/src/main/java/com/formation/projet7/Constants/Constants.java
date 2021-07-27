@@ -14,7 +14,9 @@ public class Constants {
     
     public static final String OBJET = "Bibliothèque municipale - relance";
     
-    public static final long HEURES = 2;
-    public static final long DELAY_AVIS= 2;
+    public static final long HEURES = 24;  			 // Mode production - durée cycle de scutation
+    public static final long DELAY_AVIS= 2; 		 // Mode production - délai validité avant annulation réservation
+    public static final long DELAY_AVIS_MIN = 12;	 // Mode démo - délai validité avant annulation réservation
+	public static final long MINS = 2;				 // Mode démo - durée cycle de scrutation
 
 }

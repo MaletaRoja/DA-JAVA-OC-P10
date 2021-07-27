@@ -28,6 +28,16 @@ public class ReservationService {
 	@Autowired
 	MailController mailController;
 
+	/*
+	 * Méthode d'expédition de mail Pour démo:
+	 * La date de
+	 * l'avis doit être null pour une réservation, id exemplaire doit être défini
+	 * (différent de null). La réservation doit être active. Pour un test, 8 min
+	 * après l'expédition de l'avis, le délai de réservation est considéré comme
+	 * expiré. La réservation devient inactive
+	 * 
+	 */
+
 	public void expedierAvis() {
 
 		Login login = new Login("mailservice", "mail");
@@ -41,37 +51,42 @@ public class ReservationService {
 		System.out.println("Taille liste avis: " + listeAvis.size());
 		List<Avis> avisDepasses = new ArrayList<>();
 		List<Avis> avisDates = new ArrayList<>();
-		
+
 		try {
 
 			for (Avis a : listeAvis) {
-	
-				if(a.getExemplaire() != null) {
-					
+
+				if (a.getExemplaire() != null) {
+
 					LocalDateTime dateAvis = a.getDateAvis();
-					if (dateAvis == null) {	
+					if (dateAvis == null) {
 						envoyerAvis(a);
 						System.out.println("Avis expédié");
 						a.setDateAvis(LocalDateTime.now());
 						avisDates.add(a);
+
+					} else {
+						// Mode production. Délai: 2 jours
+						// if(dateAvis.plusDays(2).isAfter(LocalDateTime.now())) {
+
+						// Mode test. Délai: 7 mins
 						
-					}else {
-						
-						if(dateAvis.plusDays(com.formation.projet7.Constants.Constants.DELAY_AVIS).isAfter(LocalDateTime.now())) {
+						if (dateAvis.plusMinutes(7).isBefore(LocalDateTime.now())) {
 							
 							avisDepasses.add(a);
 						}
 					}
 				}
-				
-				Transfert transfertAvisDepasses = new Transfert();
-				transfertAvisDepasses.setListeAvis(avisDepasses);
-				Transfert transfertAvisDates = new Transfert();
-				transfertAvisDates.setListeAvis(avisDates);
-				supprimerAvisDepasses(token, transfertAvisDepasses);
-				ajouterDates(token, transfertAvisDates);
-				
+
 			}
+
+			Transfert transfertAvisDepasses = new Transfert();
+			transfertAvisDepasses.setListeAvis(avisDepasses);
+			Transfert transfertAvisDates = new Transfert();
+			transfertAvisDates.setListeAvis(avisDates);
+			supprimerAvisDepasses(token, transfertAvisDepasses);
+			ajouterDates(token, transfertAvisDates);
+
 		} catch (Exception e) {
 
 			System.out.println("Problème transmission avis");
@@ -81,15 +96,15 @@ public class ReservationService {
 	}
 
 	private void ajouterDates(String token, Transfert transfertAvisDates) {
-		
+
 		microServiceBibliotheque.ajouterDatesAvisMail(token, transfertAvisDates);
-		
+
 	}
 
 	private void supprimerAvisDepasses(String token, Transfert transfertAvisDepasses) {
-		
+
 		microServiceBibliotheque.supprimerReservationMail(token, transfertAvisDepasses);
-		
+
 	}
 
 	public void envoyerAvis(Avis a) {

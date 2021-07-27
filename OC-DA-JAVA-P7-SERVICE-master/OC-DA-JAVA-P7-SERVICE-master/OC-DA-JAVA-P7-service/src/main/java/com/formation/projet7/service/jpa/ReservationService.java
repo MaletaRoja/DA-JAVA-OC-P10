@@ -70,7 +70,6 @@ public class ReservationService implements IReservationService {
 			
 		} else {
 			
-			System.out.println("Taille sup à 0");
 			for (Reservation r : reservations) {
 				
 				if (r.isActif()) {
@@ -166,6 +165,33 @@ public class ReservationService implements IReservationService {
 		
 		Reservation reservation = reservationRepo.getOne(id);
 		return reservation;
+	}
+
+	public void rotationReservations(List<Reservation> reservations, Exemplaire exemplaire) {
+	
+		for(Reservation r: reservations) {
+			
+			if(r.isActif()) {
+				
+				if(r.getPriorite() > 0) {
+					
+					r.setPriorite(r.getPriorite() - 1);
+					if(r.getPriorite() == 1) {
+						
+						r.setExemplaire_id(exemplaire.getId());
+						r.setDateAvis(null);
+					}
+					
+					if(r.getPriorite() == 0) {
+						
+						r.setExemplaire_id(null);
+					}
+				}
+				
+				enregistrerReservation(r);
+			}
+		}
+		
 	}
 
 }

@@ -25,6 +25,7 @@ import com.formation.projet7.model.Reservation;
 import com.formation.projet7.model.Transfert;
 import com.formation.projet7.model.Utilisateur;
 import com.formation.projet7.service.jpa.EmpruntService;
+import com.formation.projet7.service.jpa.ExemplaireService;
 import com.formation.projet7.service.jpa.OuvrageService;
 import com.formation.projet7.service.jpa.ReservationService;
 import com.formation.projet7.service.jpa.UserService;
@@ -45,6 +46,10 @@ public class ReservationController {
 
 	@Autowired
 	EmpruntService empruntService;
+	
+	@Autowired
+	ExemplaireService exemplaireService;
+	
 
 	@GetMapping("/reservations/{idUser}")
 	public List<OuvrageAux> listerReservations(@RequestHeader("Authorization") String token,
@@ -146,6 +151,13 @@ public class ReservationController {
 
 			Reservation r = reservationService.obtenirReservationParId(a.getReservation());
 			r.setActif(false);
+			Integer idExemplaire = r.getExemplaire_id();
+			r.setExemplaire_id(null);
+			r.setPriorite(null);
+			Exemplaire ex = exemplaireService.obtenirExemplaire(idExemplaire);
+			Ouvrage ouvrage = ex.getOuvrage();
+			List<Reservation> reservations = ouvrage.getReservations();
+			reservationService.rotationReservations(reservations, ex);
 			reservationService.enregistrerReservation(r);
 		}
 

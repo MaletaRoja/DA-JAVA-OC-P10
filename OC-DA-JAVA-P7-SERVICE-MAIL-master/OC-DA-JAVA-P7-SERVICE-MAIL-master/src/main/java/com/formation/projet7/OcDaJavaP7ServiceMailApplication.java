@@ -44,7 +44,8 @@ public class OcDaJavaP7ServiceMailApplication {
 		
 		empruntService.relancer();
 		reservationService.expedierAvis();
-		Thread.sleep(1000L * 60 * 60 * Constants.HEURES); 
+		//Thread.sleep(1000L * 60 * 60 * Constants.HEURES); // Mode production: délai = 24h00
+		Thread.sleep(1000L * 60 * Constants.MINS);  						// Mode test: délai = 5 min
 
 	}
 
