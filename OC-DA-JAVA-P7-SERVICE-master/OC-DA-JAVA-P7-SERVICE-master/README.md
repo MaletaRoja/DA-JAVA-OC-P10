@@ -3,9 +3,8 @@
 L'application doit permettre aux usages d'une bibliothèque municipale de consulter les ouvrages de la bibliothèque, de suivre
 leurs emprunts, de les prolonger une seule fois pour une durée de quatre semaines. 
 
-Le site a été déployé sur AWS avec les services EC2 et RDS à l'adresse: http://35.180.165.119:8080/biblio/
+Le site a été déployé sur un serveur Linode et utilise une base de données PostgreSQL sur une instance RDS  de AWS à l'adresse: http://192.46.239.178:8080/biblio/
 
-L'instance EC2 héberge l'application proprement dit tandis que l'instance RDS héberge la base de données associée à l'application.
 
 # Déployement
 
@@ -21,3 +20,4 @@ lignes suivantes:<br/>
 <role rolename="manager-gui"/>
 <user username="xxxxxx" password="xxxx" roles="tomcat, manager-gui"/>
 ```
+
