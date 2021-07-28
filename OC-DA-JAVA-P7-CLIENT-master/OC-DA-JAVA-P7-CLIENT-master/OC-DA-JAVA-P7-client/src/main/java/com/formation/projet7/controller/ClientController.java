@@ -30,7 +30,7 @@ import com.formation.projet7.service.PageOuvrage;
 import com.formation.projet7.service.UserConnexion;
 
 @Controller
-@RequestMapping("/biblio/client")
+@RequestMapping("/client")
 public class ClientController {
 
 	@Autowired
