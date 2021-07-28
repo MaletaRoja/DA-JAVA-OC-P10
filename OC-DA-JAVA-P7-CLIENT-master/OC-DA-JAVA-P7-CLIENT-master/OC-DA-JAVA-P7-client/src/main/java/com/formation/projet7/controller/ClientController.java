@@ -84,7 +84,7 @@ public class ClientController {
 
 		} else {
 
-			return "redirect:/biblio/client/connexion?error=true";
+			return "redirect:/client/connexion?error=true";
 		}
 	}
 
@@ -385,7 +385,7 @@ public class ClientController {
 
 		} else {
 
-			return "redirect:/biblio/client/compte/modifier?error=true";
+			return "redirect:/client/compte/modifier?error=true";
 		}
 
 	}
@@ -400,7 +400,7 @@ public class ClientController {
 
 		if (phrase.isEmpty()) {
 
-			return "redirect:/biblio/client/";
+			return "redirect:/client/";
 
 		} else {
 
