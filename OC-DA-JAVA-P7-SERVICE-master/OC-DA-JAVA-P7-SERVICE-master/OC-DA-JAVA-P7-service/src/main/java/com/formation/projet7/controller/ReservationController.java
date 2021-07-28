@@ -31,7 +31,7 @@ import com.formation.projet7.service.jpa.ReservationService;
 import com.formation.projet7.service.jpa.UserService;
 
 @RestController
-@RequestMapping("/biblio")
+//@RequestMapping("/biblio")
 
 public class ReservationController {
 

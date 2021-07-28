@@ -29,7 +29,7 @@ import com.formation.projet7.constants.Constants;
 
 
 @RestController
-@RequestMapping("/biblio")
+//@RequestMapping("/biblio")
 public class EmpruntController {
 
 	@Autowired

@@ -67,13 +67,13 @@
 
 							<span th:if="${nbreExemplairesDispos.get(iStat.index)>0}">
 								<td style="text-align:center"><a
-										th:href="@{/biblio/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">Emprunter</a>
+										th:href="@{/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">Emprunter</a>
 								</td>
 							</span>
 
 							<span th:unless="${nbreExemplairesDispos.get(iStat.index)>0}">
 								<td style="text-align:center"><a
-										th:href="@{/biblio/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">-</a>
+										th:href="@{/client/emprunter/{id}/{rub}(id=${iStat.index}, rub=${rubrique})}">-</a>
 								</td>
 							</span>
 							
@@ -94,7 +94,7 @@
 							</span>
 							
 							<span th:if="${ouvrage.reservable}">
-							<td><a th:href="@{/biblio/client/reserver/{id}(id=${ouvrage.id})}">Réserver</a></td>
+							<td><a th:href="@{/client/reserver/{id}(id=${ouvrage.id})}">Réserver</a></td>
 							</span>
 							
 							<span th:unless="${ouvrage.reservable}">

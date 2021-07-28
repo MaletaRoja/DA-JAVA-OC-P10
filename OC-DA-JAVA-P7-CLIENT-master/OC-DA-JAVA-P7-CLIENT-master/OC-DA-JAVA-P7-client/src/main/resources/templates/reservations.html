@@ -63,7 +63,7 @@
 							<td th:text="${ouvrage.genre}" />
 							<td style="text-align:center" th:text="${#temporals.format(ouvrage.retour, 'dd-MM-yyyy')}"></td>
 							<td style="text-align:center" th:text="${ouvrage.priorite}"></td>
-							<td><a th:href="@{/biblio/client/reservation/annuler/{id}(id=${ouvrage.id})}">Annuler</a></td>
+							<td><a th:href="@{/client/reservation/annuler/{id}(id=${ouvrage.id})}">Annuler</a></td>
 							
 						</tr>
 

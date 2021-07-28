@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/bibio/auth/")
+@RequestMapping("/auth/")
 public class SecurityController {
 	
 	
 	// Méthode de test
 	
 
-	@GetMapping("/biblio/access")
+	@GetMapping("/access")
 
 	public ResponseEntity<?> getInformacionBancaria(){
 		List<String> movimientosBancarios = obtenerUltimosMovimientosBancarios();

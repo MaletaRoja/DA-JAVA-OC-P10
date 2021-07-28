@@ -70,7 +70,7 @@
 
 				<div class="row d-flex justify-content-center">
 					<a class="btn mb-1 bouton2" style="background-color: #a32fa9; color: white;"
-						th:href="@{/biblio/client/logout}">Déconnexion</a>
+						th:href="@{/client/logout}">Déconnexion</a>
 				</div>
 
 			</div>
@@ -83,14 +83,14 @@
 				</div>
 
 				<div class="row d-flex justify-content-center">
-					<a th:href="@{/biblio/client/emprunts/{id}(id=${utilisateur.id})}"><button type="button"
+					<a th:href="@{/client/emprunts/{id}(id=${utilisateur.id})}"><button type="button"
 							class="btn mb-1 bouton2" style="background-color: #a32fa9; color: white;">Emprunts en
 							cours</button></a>
 				</div>
 
 
 				<div class="row d-flex justify-content-center">
-					<a th:href="@{/biblio/client/emprunts/historique/{id}(id=${utilisateur.id})}"><button type="button"
+					<a th:href="@{/client/emprunts/historique/{id}(id=${utilisateur.id})}"><button type="button"
 							class="btn mb-1 bouton2" style="background-color: #a32fa9; color: white;">Historique des
 							emprunts</button></a>
 				</div>

@@ -17,7 +17,7 @@ import com.formation.projet7.security.JWTGenerator;
 import com.formation.projet7.service.jpa.UserService;
 
 @RestController
-@RequestMapping("/biblio/")
+//@RequestMapping("/biblio/")
 public class TokenController {
 	
 	@Autowired

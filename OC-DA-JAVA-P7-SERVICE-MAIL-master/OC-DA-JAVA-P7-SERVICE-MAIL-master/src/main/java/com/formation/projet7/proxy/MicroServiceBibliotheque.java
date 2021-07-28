@@ -16,7 +16,7 @@ import com.formation.projet7.model.Transfert;
 import com.formation.projet7.model.UtilisateurAux;
 
 //@FeignClient(name="biblio-service", url="localhost:8081/biblio")
-@FeignClient(name="biblio-service", url="localhost:8081/biblio")
+@FeignClient(name="biblioservice", url="localhost:8080/biblio-service")
 public interface MicroServiceBibliotheque {
 	
 	@GetMapping("ouvrage/emprunts/mail")
