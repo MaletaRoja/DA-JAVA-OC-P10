@@ -91,15 +91,20 @@ public class OuvragesController {
 		List<OuvrageAux> ouvragesAux = new ArrayList();
 		System.out.println("Taille emprunts: " + emprunts.size());
 		List<Integer> idEmprunts = new ArrayList<>();
+		
+		if(!emprunts.isEmpty()) {
+			
+			for (Emprunt e : emprunts) {
 
-		for (Emprunt e : emprunts) {
+				Ouvrage oEmprunt = e.getExemplaire().getOuvrage();
+				Integer idOuvrageEmprunt = oEmprunt.getId();
+				System.out.println("e: " + idOuvrageEmprunt + " - id e:" + e.getId());
+				idEmprunts.add(idOuvrageEmprunt);
 
-			Ouvrage oEmprunt = e.getExemplaire().getOuvrage();
-			Integer idOuvrageEmprunt = oEmprunt.getId();
-			System.out.println("e: " + idOuvrageEmprunt + " - id e:" + e.getId());
-			idEmprunts.add(idOuvrageEmprunt);
-
+			}
+			
 		}
+		
 
 		int i = 0;
 		for (Ouvrage ouvrage : ouvrages) {
@@ -274,7 +279,7 @@ public class OuvragesController {
 
 	public void checkDates(List<Emprunt> empruntsActifs, OuvrageAux o) {
 
-		if (empruntsActifs != null && o.getOffrable() == 0) {
+		if (empruntsActifs != null && !empruntsActifs.isEmpty()&& o.getOffrable() == 0) {
 
 			LocalDateTime dateProche = empruntsActifs.get(0).getFin();
 
