@@ -57,40 +57,50 @@ public class ReservationController {
 
 		List<Reservation> reservations = reservationService.obtenirListeReservationsParUtilisateur(idUser);
 		List<OuvrageAux> ouvrages = new ArrayList<>();
+		
+		if (!reservations.isEmpty()) {
+			
+			for (Reservation r : reservations) {
+				
+				if(r.isActif()) {
+					
+					Ouvrage ouvrage = r.getOuvrage();
+					OuvrageAux o = new OuvrageAux();
+					o.setId(ouvrage.getId());
+					o.setAuteur_nom(ouvrage.getAuteur_nom());
+					o.setAuteur_prenom(ouvrage.getAuteur_prenom());
+					o.setEdition(ouvrage.getEdition());
+					o.setGenre(ouvrage.getGenre());
+					o.setTitre(ouvrage.getTitre());
+					o.setPriorite(r.getPriorite());
+					List<Emprunt> empruntsActifs = empruntService.listerOuvrageEmpruntsActifs(ouvrage);
+					List<LocalDateTime> retours = new ArrayList<>();
+					for (Emprunt e : empruntsActifs) {
 
-		for (Reservation r : reservations) {
+						System.out.println("date fin emprunt: " + e.getFin());
+						retours.add(e.getFin());
+						Collections.sort(retours);
+						o.setRetour(retours.get(retours.size() - 1));
+					}
 
-			Ouvrage ouvrage = r.getOuvrage();
-			OuvrageAux o = new OuvrageAux();
-			o.setId(ouvrage.getId());
-			o.setAuteur_nom(ouvrage.getAuteur_nom());
-			o.setAuteur_prenom(ouvrage.getAuteur_prenom());
-			o.setEdition(ouvrage.getEdition());
-			o.setGenre(ouvrage.getGenre());
-			o.setTitre(ouvrage.getTitre());
-			o.setPriorite(r.getPriorite());
-			List<Emprunt> empruntsActifs = empruntService.listerOuvrageEmpruntsActifs(ouvrage);
-			List<LocalDateTime> retours = new ArrayList<>();
-			for (Emprunt e : empruntsActifs) {
+					for (OuvrageAux ouv : ouvrages) {
 
-				System.out.println("date fin emprunt: " + e.getFin());
-				retours.add(e.getFin());
-				Collections.sort(retours);
-				o.setRetour(retours.get(retours.size() - 1));
+						Integer idO = ouv.getId();
+						Integer priorite = reservationService.isReservationPossible(idO);
+						ouv.setPriorite(priorite);
+					}
+
+					ouvrages.add(o);
+				}
+
+		
 			}
 
-			for (OuvrageAux ouv : ouvrages) {
-
-				Integer idO = ouv.getId();
-				Integer priorite = reservationService.isReservationPossible(idO);
-				ouv.setPriorite(priorite);
-			}
-
-			ouvrages.add(o);
 		}
-
+		
 		return ouvrages;
 	}
+
 
 	@GetMapping("/reserver/{idUser}/{idOuvrage}")
 	public boolean reserverOuvrage(@RequestHeader("Authorization") String token, @PathVariable Integer idUser,
